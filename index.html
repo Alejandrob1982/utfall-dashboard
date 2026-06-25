@@ -27,7 +27,7 @@
 
         .container { max-width: 1200px; margin: 0 auto; }
 
-        /* View Switcher (Apple Style) */
+        /* View Switcher */
         .view-switcher {
             display: flex;
             justify-content: center;
@@ -88,7 +88,7 @@
         .upload-btn {
             background: rgba(0, 122, 255, 0.15);
             color: var(--accent-blue);
-            padding: 12px 28px;
+            padding: 12px 24px;
             border-radius: 14px;
             font-weight: 700;
             font-size: 13px;
@@ -177,10 +177,11 @@
     <div class="header"><h1>Utfall & Verklighet 2026</h1></div>
 
     <div class="controls-glass">
-        <div style="display: flex; align-items: center;">
-            <label for="excel-upload" class="upload-btn">Välj Affärsdata</label>
+        <div style="display: flex; align-items: center; gap: 8px;">
+            <button class="upload-btn" onclick="syncFromCloud()">Tvinga Synk</button>
+            <label for="excel-upload" class="upload-btn" style="background: transparent; border-color: rgba(255,255,255,0.1); color: #888; font-size: 11px; padding: 13px 14px;">Manuell</label>
             <input type="file" id="excel-upload" accept=".xlsx, .xlsm">
-            <span id="sync-status"></span>
+            <span id="sync-status">VÄNTAR</span>
         </div>
         <div class="select-group">
             <select id="cust-select"><option value="ALLA">Hela Portföljen</option></select>
@@ -244,7 +245,7 @@
                     <tr><th>Kund</th><th>Månad</th><th>Utfall</th><th>Target</th><th>Typ</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td colspan="5" style="text-align: center; padding: 40px;">Ingen data inläst ännu. Klicka på 'Välj Affärsdata'.</td></tr>
+                    <tr><td colspan="5" style="text-align: center; padding: 40px;">Laddar data...</td></tr>
                 </tbody>
             </table>
         </div>
@@ -255,6 +256,55 @@
 <script>
     let rawData = [];
     const fmt = new Intl.NumberFormat('sv-SE', { style: 'currency', currency: 'SEK', maximumFractionDigits: 0 });
+
+    // Molnlänk och Proxy för nedladdning
+    const oneDriveUrl = "https://sodexo-my.sharepoint.com/personal/alejandro_borquez_sodexo_com/_layouts/15/download.aspx?sourcedoc=%7B78938342-891E-4FCA-A0FF-3F5F8A3C5B80%7D";
+    const proxyUrl = "https://corsproxy.io/?" + encodeURIComponent(oneDriveUrl);
+
+    // Initial automatisk laddning
+    window.addEventListener('DOMContentLoaded', syncFromCloud);
+
+    async function syncFromCloud() {
+        document.getElementById('sync-status').innerText = "HÄMTAR MOLNDATA...";
+        document.getElementById('sync-status').style.color = "var(--accent-blue)";
+        try {
+            const response = await fetch(proxyUrl);
+            if (!response.ok) throw new Error("Nätverksfel");
+            const arrayBuffer = await response.arrayBuffer();
+            const workbook = XLSX.read(new Uint8Array(arrayBuffer), {type: 'array'});
+            processWorkbook(workbook, "MOLN");
+        } catch (err) {
+            console.error(err);
+            document.getElementById('sync-status').innerText = "MOLN-FEL: ANVÄND MANUELLT";
+            document.getElementById('sync-status').style.color = "var(--accent-orange)";
+        }
+    }
+
+    function processWorkbook(workbook, source) {
+        try {
+            const sheetName = workbook.SheetNames.find(n => n.includes('Total OMS')) || workbook.SheetNames[0];
+            rawData = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
+            
+            if (rawData.length > 0) {
+                document.getElementById('sync-status').innerText = "● LIVE (" + source + ")";
+                document.getElementById('sync-status').style.color = "var(--accent-green)";
+                
+                const custS = document.getElementById('cust-select');
+                custS.innerHTML = '<option value="ALLA">Hela Portföljen</option>';
+                const customers = [...new Set(rawData.map(r => getCol(r, 'kund')))].filter(k => k && !k.toString().toLowerCase().includes('total'));
+                customers.sort().forEach(k => {
+                    const opt = document.createElement('option');
+                    opt.value = k; opt.text = k; custS.appendChild(opt);
+                });
+                
+                updateUI();
+                buildTable();
+            }
+        } catch (err) { 
+            document.getElementById('sync-status').innerText = "FEL VID LÄSNING"; 
+            document.getElementById('sync-status').style.color = "var(--accent-orange)";
+        }
+    }
 
     // Switcher Logic
     function switchView(view) {
@@ -286,38 +336,14 @@
 
     const fileInput = document.getElementById('excel-upload');
     fileInput.addEventListener('click', () => { fileInput.value = null; });
-
     fileInput.addEventListener('change', function(e) {
         const reader = new FileReader();
-        document.getElementById('sync-status').innerText = "BEARBETAR...";
+        document.getElementById('sync-status').innerText = "BEARBETAR LOKALT...";
         document.getElementById('sync-status').style.color = "var(--accent-blue)";
         
         reader.onload = (evt) => {
-            try {
-                const workbook = XLSX.read(new Uint8Array(evt.target.result), {type: 'array'});
-                const sheetName = workbook.SheetNames.find(n => n.includes('Total OMS')) || workbook.SheetNames[0];
-                rawData = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
-                
-                if (rawData.length > 0) {
-                    document.getElementById('sync-status').innerText = "● LIVE";
-                    document.getElementById('sync-status').style.color = "var(--accent-green)";
-                    
-                    // Uppdatera Dropdowns
-                    const custS = document.getElementById('cust-select');
-                    custS.innerHTML = '<option value="ALLA">Hela Portföljen</option>';
-                    const customers = [...new Set(rawData.map(r => getCol(r, 'kund')))].filter(k => k && !k.toString().toLowerCase().includes('total'));
-                    customers.sort().forEach(k => {
-                        const opt = document.createElement('option');
-                        opt.value = k; opt.text = k; custS.appendChild(opt);
-                    });
-                    
-                    updateUI();
-                    buildTable();
-                }
-            } catch (err) { 
-                document.getElementById('sync-status').innerText = "FEL VID LÄSNING"; 
-                document.getElementById('sync-status').style.color = "var(--accent-orange)";
-            }
+            const workbook = XLSX.read(new Uint8Array(evt.target.result), {type: 'array'});
+            processWorkbook(workbook, "LOKAL");
         };
         reader.readAsArrayBuffer(e.target.files[0]);
     });
@@ -369,7 +395,6 @@
         document.getElementById('o-diff-c').className = 'liquid-card ' + (y.offdiff >= 0 ? 'status-positive' : 'status-negative');
     }
 
-    // Bygg HTML-tabellen för Rådata
     function buildTable() {
         const tbody = document.querySelector('#data-table tbody');
         tbody.innerHTML = '';
@@ -378,7 +403,6 @@
             let tr = document.createElement('tr');
             let k = getCol(r, 'kund') || '';
             
-            // Ignorera total-rader från excel-filen
             if(k.toString().toLowerCase().includes('total')) return;
 
             tr.innerHTML = `
