@@ -28,91 +28,49 @@
         .container { max-width: 1200px; margin: 0 auto; }
 
         /* View Switcher */
-        .view-switcher {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 40px;
-        }
+        .view-switcher { display: flex; justify-content: center; margin-bottom: 40px; }
         .segmented-control {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 4px;
-            border-radius: 14px;
-            display: flex;
-            gap: 4px;
-            border: 1px solid var(--glass-border);
-            backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.05); padding: 4px; border-radius: 14px;
+            display: flex; gap: 4px; border: 1px solid var(--glass-border); backdrop-filter: blur(20px);
         }
         .segment-btn {
-            background: transparent;
-            color: #86868b;
-            border: none;
-            padding: 8px 24px;
-            border-radius: 10px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            background: transparent; color: #86868b; border: none; padding: 8px 24px;
+            border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer;
+            transition: all 0.3s; text-transform: uppercase; letter-spacing: 1px;
         }
         .segment-btn.active {
-            background: rgba(255, 255, 255, 0.1);
-            color: #fff;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            background: rgba(255, 255, 255, 0.1); color: #fff; box-shadow: 0 2px 10px rgba(0,0,0,0.2);
         }
 
         .header { text-align: center; margin-bottom: 30px; }
         .header h1 { 
-            font-weight: 600; 
-            letter-spacing: -0.5px; 
-            font-size: 28px;
+            font-weight: 600; letter-spacing: -0.5px; font-size: 28px;
             background: linear-gradient(to bottom, #fff 0%, #a1a1a6 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin: 0;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0;
         }
 
         .controls-glass {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            padding: 20px 24px;
-            border-radius: 24px;
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 30px;
-            align-items: center;
-            margin-bottom: 40px;
+            background: var(--glass-bg); backdrop-filter: blur(20px); border: 1px solid var(--glass-border);
+            padding: 20px 24px; border-radius: 24px; display: grid; grid-template-columns: 1fr 2fr;
+            gap: 30px; align-items: center; margin-bottom: 40px;
         }
 
         .upload-btn {
-            background: rgba(0, 122, 255, 0.15);
-            color: var(--accent-blue);
-            padding: 12px 24px;
-            border-radius: 14px;
-            font-weight: 700;
-            font-size: 13px;
-            cursor: pointer;
-            transition: all 0.4s;
-            border: 1px solid rgba(0, 122, 255, 0.3);
-            display: inline-block;
-            backdrop-filter: blur(10px);
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            background: rgba(0, 122, 255, 0.15); color: var(--accent-blue); padding: 12px 24px;
+            border-radius: 14px; font-weight: 700; font-size: 13px; cursor: pointer;
+            transition: all 0.4s; border: 1px solid rgba(0, 122, 255, 0.3); display: inline-block;
+            backdrop-filter: blur(10px); text-transform: uppercase; letter-spacing: 1px;
         }
         .upload-btn:hover { 
-            background: var(--accent-blue); color: #fff;
-            box-shadow: 0 0 30px rgba(0, 122, 255, 0.6);
+            background: var(--accent-blue); color: #fff; box-shadow: 0 0 30px rgba(0, 122, 255, 0.6);
             transform: translateY(-2px) scale(1.02);
         }
         input[type="file"] { display: none; }
 
         .select-group { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
         select {
-            background: rgba(0, 0, 0, 0.4); color: #fff;
-            border: 1px solid var(--glass-border);
-            padding: 12px 16px; border-radius: 14px;
-            font-size: 14px; outline: none; cursor: pointer;
+            background: rgba(0, 0, 0, 0.4); color: #fff; border: 1px solid var(--glass-border);
+            padding: 12px 16px; border-radius: 14px; font-size: 14px; outline: none; cursor: pointer;
             transition: all 0.3s;
         }
         select:hover { border-color: var(--accent-blue); }
@@ -121,21 +79,18 @@
         /* View Containers */
         #dashboard-view { animation: fadeIn 0.5s ease-out; display: block; }
         #data-view { animation: fadeIn 0.5s ease-out; display: none; }
-        
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         /* Dashboard Cards */
         .section-row { margin-bottom: 60px; }
         .row-header {
-            font-size: 12px; font-weight: 700; text-transform: uppercase;
-            letter-spacing: 1.5px; color: #86868b; margin-bottom: 20px;
-            padding-left: 10px; display: flex; justify-content: space-between;
+            font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px;
+            color: #86868b; margin-bottom: 20px; padding-left: 10px; display: flex; justify-content: space-between;
         }
         .liquid-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
         .liquid-card {
-            background: var(--glass-bg); backdrop-filter: blur(30px);
-            border: 1px solid var(--glass-border); padding: 35px 20px;
-            border-radius: 28px; text-align: center; transition: all 0.5s;
+            background: var(--glass-bg); backdrop-filter: blur(30px); border: 1px solid var(--glass-border);
+            padding: 35px 20px; border-radius: 28px; text-align: center; transition: all 0.5s;
         }
         .val-label { font-size: 11px; color: #86868b; font-weight: 600; margin-bottom: 15px; letter-spacing: 0.5px; }
         .val-display { font-size: 34px; font-weight: 700; letter-spacing: -1px; color: #fff; }
@@ -145,32 +100,17 @@
         .status-negative { border-color: rgba(255, 149, 0, 0.4); background: rgba(255, 149, 0, 0.03); }
         .status-negative .val-display { color: var(--accent-orange); text-shadow: 0 0 20px rgba(255, 149, 0, 0.3); }
 
-        #sync-status { font-size: 10px; color: var(--accent-green); margin-left: 15px; font-weight: 800; letter-spacing: 1px; opacity: 0.8; }
-
-        /* Data Table Styling */
-        .table-container {
-            background: var(--glass-bg); backdrop-filter: blur(30px);
-            border: 1px solid var(--glass-border); border-radius: 24px;
-            padding: 20px; overflow-x: auto; max-height: 600px;
-        }
-        table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; }
-        th { 
-            position: sticky; top: 0; background: rgba(10, 17, 26, 0.95);
-            color: var(--accent-blue); padding: 15px; font-weight: 700;
-            text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--glass-border);
-        }
-        td { padding: 12px 15px; border-bottom: 1px solid rgba(255,255,255,0.05); color: #ccc; }
-        tr:hover td { background: rgba(255,255,255,0.05); color: #fff; }
+        #sync-status { font-size: 10px; color: var(--accent-orange); margin-left: 15px; font-weight: 800; letter-spacing: 1px; opacity: 0.8; }
+        .iframe-container { background: #fff; border-radius: 24px; overflow: hidden; height: 600px; width: 100%; border: 1px solid var(--glass-border); }
     </style>
 </head>
 <body>
 
 <div class="container">
-    
     <div class="view-switcher">
         <div class="segmented-control">
             <button class="segment-btn active" onclick="switchView('dashboard')">Dashboard</button>
-            <button class="segment-btn" onclick="switchView('data')">Affärsdata</button>
+            <button class="segment-btn" onclick="switchView('data')">Affärsdata (Live)</button>
         </div>
     </div>
 
@@ -178,10 +118,9 @@
 
     <div class="controls-glass">
         <div style="display: flex; align-items: center; gap: 8px;">
-            <button class="upload-btn" onclick="syncFromCloud()">Tvinga Synk</button>
-            <label for="excel-upload" class="upload-btn" style="background: transparent; border-color: rgba(255,255,255,0.1); color: #888; font-size: 11px; padding: 13px 14px;">Manuell</label>
+            <label for="excel-upload" class="upload-btn">Uppdatera Dashboard-Kort (Manuell)</label>
             <input type="file" id="excel-upload" accept=".xlsx, .xlsm">
-            <span id="sync-status">VÄNTAR</span>
+            <span id="sync-status">MOLN-BLOCK: KRÄVER MANUELL FIL</span>
         </div>
         <div class="select-group">
             <select id="cust-select"><option value="ALLA">Hela Portföljen</option></select>
@@ -220,34 +159,15 @@
                 <div class="liquid-card" id="y-diff-c"><div class="val-label">Operativ Diff YTD</div><div class="val-display" id="y-diff">0 kr</div></div>
             </div>
         </div>
-
-        <div class="section-row" style="opacity: 0.85;">
-            <div class="row-header">
-                <span>Officiell Rapport — <span id="label-o" style="color: #fff;">VÄNTAR PÅ DATA</span></span>
-                <span style="color: #64748b;">INKLUSIVE PUSH (HELÅR)</span>
-            </div>
-            <div class="liquid-grid">
-                <div class="liquid-card"><div class="val-label">Total Intäkt YTD</div><div class="val-display" id="o-inc">0 kr</div></div>
-                <div class="liquid-card"><div class="val-label">Totalt Mål YTD (Officiellt)</div><div class="val-display" id="o-tar">0 kr</div></div>
-                <div class="liquid-card" id="o-diff-c"><div class="val-label">Officiell Diff YTD</div><div class="val-display" id="o-diff">0 kr</div></div>
-            </div>
-        </div>
     </div>
 
     <div id="data-view">
         <div class="row-header" style="margin-top: 10px;">
-            <span>Inläst Affärsdata (Läs-vy)</span>
-            <span style="color: var(--accent-blue);">DATABAS</span>
+            <span>Live Affärsdata (SharePoint Iframe)</span>
+            <span style="color: var(--accent-blue);">LÄS-VY (MOLN)</span>
         </div>
-        <div class="table-container">
-            <table id="data-table">
-                <thead>
-                    <tr><th>Kund</th><th>Månad</th><th>Utfall</th><th>Target</th><th>Typ</th></tr>
-                </thead>
-                <tbody>
-                    <tr><td colspan="5" style="text-align: center; padding: 40px;">Laddar data...</td></tr>
-                </tbody>
-            </table>
+        <div class="iframe-container">
+            <iframe width="100%" height="100%" frameborder="0" scrolling="yes" src="https://sodexo-my.sharepoint.com/personal/alejandro_borquez_sodexo_com/_layouts/15/Doc.aspx?sourcedoc={78938342-891e-4fca-a0ff-3f5f8a3c5b80}&action=embedview&wdAllowInteractivity=True&wdHideGridlines=True&wdHideHeaders=True&wdDownloadButton=True"></iframe>
         </div>
     </div>
 
@@ -257,56 +177,6 @@
     let rawData = [];
     const fmt = new Intl.NumberFormat('sv-SE', { style: 'currency', currency: 'SEK', maximumFractionDigits: 0 });
 
-    // Molnlänk och Proxy för nedladdning
-    const oneDriveUrl = "https://sodexo-my.sharepoint.com/personal/alejandro_borquez_sodexo_com/_layouts/15/download.aspx?sourcedoc=%7B78938342-891E-4FCA-A0FF-3F5F8A3C5B80%7D";
-    const proxyUrl = "https://corsproxy.io/?" + encodeURIComponent(oneDriveUrl);
-
-    // Initial automatisk laddning
-    window.addEventListener('DOMContentLoaded', syncFromCloud);
-
-    async function syncFromCloud() {
-        document.getElementById('sync-status').innerText = "HÄMTAR MOLNDATA...";
-        document.getElementById('sync-status').style.color = "var(--accent-blue)";
-        try {
-            const response = await fetch(proxyUrl);
-            if (!response.ok) throw new Error("Nätverksfel");
-            const arrayBuffer = await response.arrayBuffer();
-            const workbook = XLSX.read(new Uint8Array(arrayBuffer), {type: 'array'});
-            processWorkbook(workbook, "MOLN");
-        } catch (err) {
-            console.error(err);
-            document.getElementById('sync-status').innerText = "MOLN-FEL: ANVÄND MANUELLT";
-            document.getElementById('sync-status').style.color = "var(--accent-orange)";
-        }
-    }
-
-    function processWorkbook(workbook, source) {
-        try {
-            const sheetName = workbook.SheetNames.find(n => n.includes('Total OMS')) || workbook.SheetNames[0];
-            rawData = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
-            
-            if (rawData.length > 0) {
-                document.getElementById('sync-status').innerText = "● LIVE (" + source + ")";
-                document.getElementById('sync-status').style.color = "var(--accent-green)";
-                
-                const custS = document.getElementById('cust-select');
-                custS.innerHTML = '<option value="ALLA">Hela Portföljen</option>';
-                const customers = [...new Set(rawData.map(r => getCol(r, 'kund')))].filter(k => k && !k.toString().toLowerCase().includes('total'));
-                customers.sort().forEach(k => {
-                    const opt = document.createElement('option');
-                    opt.value = k; opt.text = k; custS.appendChild(opt);
-                });
-                
-                updateUI();
-                buildTable();
-            }
-        } catch (err) { 
-            document.getElementById('sync-status').innerText = "FEL VID LÄSNING"; 
-            document.getElementById('sync-status').style.color = "var(--accent-orange)";
-        }
-    }
-
-    // Switcher Logic
     function switchView(view) {
         document.querySelectorAll('.segment-btn').forEach(btn => btn.classList.remove('active'));
         if(view === 'dashboard') {
@@ -342,8 +212,28 @@
         document.getElementById('sync-status').style.color = "var(--accent-blue)";
         
         reader.onload = (evt) => {
-            const workbook = XLSX.read(new Uint8Array(evt.target.result), {type: 'array'});
-            processWorkbook(workbook, "LOKAL");
+            try {
+                const workbook = XLSX.read(new Uint8Array(evt.target.result), {type: 'array'});
+                const sheetName = workbook.SheetNames.find(n => n.includes('Total OMS')) || workbook.SheetNames[0];
+                rawData = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
+                
+                if (rawData.length > 0) {
+                    document.getElementById('sync-status').innerText = "● LIVE (LOKAL FIL)";
+                    document.getElementById('sync-status').style.color = "var(--accent-green)";
+                    
+                    const custS = document.getElementById('cust-select');
+                    custS.innerHTML = '<option value="ALLA">Hela Portföljen</option>';
+                    const customers = [...new Set(rawData.map(r => getCol(r, 'kund')))].filter(k => k && !k.toString().toLowerCase().includes('total'));
+                    customers.sort().forEach(k => {
+                        const opt = document.createElement('option');
+                        opt.value = k; opt.text = k; custS.appendChild(opt);
+                    });
+                    updateUI();
+                }
+            } catch (err) {
+                document.getElementById('sync-status').innerText = "FEL VID LÄSNING"; 
+                document.getElementById('sync-status').style.color = "var(--accent-orange)";
+            }
         };
         reader.readAsArrayBuffer(e.target.files[0]);
     });
@@ -356,7 +246,6 @@
         
         document.getElementById('label-m').innerText = (cust === 'ALLA' ? 'PORTFÖLJEN' : cust.toUpperCase()) + " | " + monT;
         document.getElementById('label-y').innerText = (cust === 'ALLA' ? 'PORTFÖLJEN' : cust.toUpperCase());
-        document.getElementById('label-o').innerText = (cust === 'ALLA' ? 'PORTFÖLJEN' : cust.toUpperCase());
 
         const filterData = (data) => cust === 'ALLA' ? data : data.filter(r => getCol(r, 'kund') === cust);
         const mData = filterData(rawData.filter(r => getCol(r, 'månad') === mon));
@@ -368,14 +257,13 @@
                 let rInc = parseV(getCol(r, 'utfall'));
                 let rTar = parseV(getCol(r, 'target'));
                 let kName = (getCol(r, 'kund') || "").toString().toLowerCase();
-                
                 let isKnownPush = (kName.includes('stfg') || kName.includes('södermalm')) && (rInc === 0);
                 let isPushText = Object.values(r).some(v => v && v.toString().toLowerCase().includes('push'));
 
                 inc += rInc; tar += rTar;
                 if (isKnownPush || isPushText) psh += rTar;
             });
-            return { inc, optar: tar - psh, diff: inc - (tar - psh), offtar: tar, offdiff: inc - tar };
+            return { inc, optar: tar - psh, diff: inc - (tar - psh) };
         };
 
         const m = calc(mData); const y = calc(yData);
@@ -388,32 +276,6 @@
         }
 
         updateSection('m', m); updateSection('y', y);
-
-        document.getElementById('o-inc').innerText = fmt.format(y.inc);
-        document.getElementById('o-tar').innerText = fmt.format(y.offtar);
-        document.getElementById('o-diff').innerText = fmt.format(y.offdiff);
-        document.getElementById('o-diff-c').className = 'liquid-card ' + (y.offdiff >= 0 ? 'status-positive' : 'status-negative');
-    }
-
-    function buildTable() {
-        const tbody = document.querySelector('#data-table tbody');
-        tbody.innerHTML = '';
-        
-        rawData.forEach(r => {
-            let tr = document.createElement('tr');
-            let k = getCol(r, 'kund') || '';
-            
-            if(k.toString().toLowerCase().includes('total')) return;
-
-            tr.innerHTML = `
-                <td style="font-weight: 600; color: #fff;">${k}</td>
-                <td>${getCol(r, 'månad') || ''}</td>
-                <td>${fmt.format(parseV(getCol(r, 'utfall')))}</td>
-                <td>${fmt.format(parseV(getCol(r, 'target')))}</td>
-                <td><span style="color: ${Object.values(r).some(v => v && v.toString().toLowerCase().includes('push')) ? 'var(--accent-orange)' : 'inherit'}">${getCol(r, 'typ') || ''}</span></td>
-            `;
-            tbody.appendChild(tr);
-        });
     }
 
     document.getElementById('cust-select').addEventListener('change', updateUI);
