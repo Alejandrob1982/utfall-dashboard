@@ -128,11 +128,11 @@
         <div class="select-group">
             <select id="cust-select"><option value="ALLA">Hela Portföljen</option></select>
             <select id="month-select">
-                <option value="Sep" selected>September</option>
+                <option value="Sep">September</option>
                 <option value="Okt">Oktober</option>
                 <option value="Nov">November</option>
                 <option value="Dec">December</option>
-                <option value="Jan">Januari</option>
+                <option value="Jan" selected>Januari</option>
                 <option value="Feb">Februari</option>
                 <option value="Mar">Mars</option>
                 <option value="Apr">April</option>
@@ -257,7 +257,8 @@
             if (matchCust && matchMon) {
                 for (let key in r) {
                     let lKey = key.toLowerCase();
-                    if (lKey.includes('oms') || lKey.includes('utfall')) {
+                    // Fångar upp både "Oms Utfall", "OMS" och "Utfall"
+                    if (lKey.includes('oms utfall') || lKey === 'oms' || lKey.includes('utfall')) {
                         totalUtfall += parseV(r[key]);
                     }
                     if (lKey.includes('target')) {
@@ -283,7 +284,7 @@
             for (let key in r) {
                 let lKey = key.toLowerCase();
                 if (lKey.includes('verksamhet') || lKey.includes('kund')) cust = r[key];
-                if (lKey.includes('oms') || lKey.includes('utfall')) utfall = parseV(r[key]);
+                if (lKey.includes('oms utfall') || lKey === 'oms' || lKey.includes('utfall')) utfall = parseV(r[key]);
                 if (lKey.includes('target')) target = parseV(r[key]);
                 if (lKey.includes('månad')) månad = r[key];
             }
