@@ -2,73 +2,66 @@
 <html lang="sv">
 <head>
     <meta charset="UTF-8">
-    <title>Utfall & Verklighet 2026</title>
+    <title>Target FY 27 — Kompakt Matris</title>
     <style>
         :root {
-            --glass-bg: rgba(255, 255, 255, 0.03);
-            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-bg: rgba(255, 255, 255, 0.02);
+            --glass-border: rgba(255, 255, 255, 0.08);
             --accent-blue: #007aff;
             --accent-green: #34c759;
             --accent-orange: #ff9500;
-            --accent-red: #ff3b30;
             --bg-deep: #000205;
         }
 
         body {
             background-color: var(--bg-deep);
-            background-image: radial-gradient(circle at 50% -20%, #1a2a44 0%, var(--bg-deep) 70%);
             color: #f5f5f7;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            margin: 0; padding: 40px 20px; min-height: 100vh; overflow-x: hidden;
+            margin: 0; padding: 20px; min-height: 100vh;
         }
 
-        .container { max-width: 1400px; margin: 0 auto; }
+        .container { max-width: 100%; margin: 0 auto; }
 
-        .view-switcher { display: flex; justify-content: center; margin-bottom: 30px; }
-        .segmented-control {
-            background: rgba(255, 255, 255, 0.05); padding: 4px; border-radius: 14px;
-            display: flex; gap: 4px; border: 1px solid var(--glass-border); backdrop-filter: blur(20px);
-        }
-        .segment-btn {
-            background: transparent; color: #86868b; border: none; padding: 8px 24px;
-            border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer;
-            transition: all 0.3s; text-transform: uppercase; letter-spacing: 1px;
-        }
-        .segment-btn.active {
-            background: rgba(255, 255, 255, 0.1); color: #fff;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-        }
-
-        .header { text-align: center; margin-bottom: 30px; }
-        .header h1 { 
-            font-weight: 600; font-size: 26px;
-            background: linear-gradient(to bottom, #fff 0%, #a1a1a6 100%);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0;
-        }
+        .header { text-align: center; margin-bottom: 20px; }
+        .header h1 { font-weight: 600; font-size: 22px; color: #fff; margin: 0; }
 
         .table-container {
-            background: var(--glass-bg); backdrop-filter: blur(30px);
-            border: 1px solid var(--glass-border); border-radius: 24px;
-            padding: 20px; overflow-x: auto; margin-bottom: 20px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 10px;
+            overflow-x: hidden; /* Förhindrar helt sidledsskroll */
         }
-        table { width: 100%; border-collapse: collapse; font-size: 12px; text-align: left; white-space: nowrap; }
-        th { 
-            position: sticky; top: 0; background: rgba(10, 17, 26, 0.95);
-            color: var(--accent-blue); padding: 14px 10px; font-weight: 700;
-            border-bottom: 1px solid var(--glass-border); text-align: right;
-        }
-        th:first-child { text-align: left; }
-        td { padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); color: #ccc; text-align: right; }
-        td:first-child { text-align: left; font-weight: 600; color: #fff; }
-        td input { width: 85px; padding: 6px; font-size: 12px; text-align: right; background: rgba(0, 0, 0, 0.5); color: #fff; border: 1px solid var(--glass-border); border-radius: 8px; }
+
+        table { width: 100%; border-collapse: collapse; font-size: 11px; text-align: left; table-layout: fixed; }
         
-        .row-calculated { background: rgba(255, 255, 255, 0.02); font-weight: 600; color: #fff; }
-        .row-total { background: rgba(0, 122, 255, 0.08); font-weight: 700; color: #fff; border-top: 2px solid var(--accent-blue); }
+        th { 
+            background: rgba(10, 17, 26, 0.95);
+            color: var(--accent-blue); padding: 8px 4px; font-weight: 700;
+            border-bottom: 1px solid var(--glass-border); text-align: right;
+            overflow: hidden; text-overflow: ellipsis;
+        }
+        th:first-child { text-align: left; width: 130px; }
+
+        td { padding: 6px 4px; border-bottom: 1px solid rgba(255,255,255,0.04); color: #ccc; text-align: right; overflow: hidden; }
+        td:first-child { text-align: left; font-weight: 600; color: #fff; }
+
+        td input { 
+            width: 100%; box-sizing: border-box; padding: 4px 2px; font-size: 11px; 
+            text-align: right; background: rgba(0, 0, 0, 0.4); color: #fff; 
+            border: 1px solid var(--glass-border); border-radius: 6px; 
+        }
+        
+        .row-calculated { background: rgba(255, 255, 255, 0.015); font-weight: 600; color: #fff; }
+        .row-total { background: rgba(0, 122, 255, 0.06); font-weight: 700; color: #fff; border-top: 2px solid var(--accent-blue); }
+
+        .actions { margin-top: 15px; display: flex; justify-content: space-between; align-items: center; }
+        .status-msg { font-size: 11px; color: var(--accent-green); font-weight: bold; }
 
         .btn-save {
             background: var(--accent-blue); color: #fff; border: none;
-            padding: 12px 30px; border-radius: 14px; font-weight: 700; cursor: pointer;
-            text-transform: uppercase; font-size: 13px; float: right; margin-top: 10px;
+            padding: 10px 24px; border-radius: 10px; font-weight: 700; cursor: pointer;
+            text-transform: uppercase; font-size: 12px;
         }
         .btn-save:hover { opacity: 0.8; }
     </style>
@@ -76,13 +69,7 @@
 <body>
 
 <div class="container">
-    <div class="view-switcher">
-        <div class="segmented-control">
-            <button class="segment-btn active" onclick="switchView('target')">Target FY 27 (Huvudbudget)</button>
-        </div>
-    </div>
-
-    <div class="header"><h1>Target FY 27 — Budget & Summering</h1></div>
+    <div class="header"><h1>Target FY 27 — Excel-modell (Får plats på skärmen)</h1></div>
 
     <div class="table-container">
         <table id="target-table">
@@ -97,14 +84,17 @@
             <tbody></tbody>
         </table>
     </div>
-    <button class="btn-save" onclick="saveTarget()">Spara Ändringar</button>
+
+    <div class="actions">
+        <span id="save-status" class="status-msg"></span>
+        <button class="btn-save" onclick="saveTarget()">Spara Ändringar</button>
+    </div>
 </div>
 
 <script>
     const months = ["Sep", "Okt", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr", "Maj", "Jun", "Jul", "Aug"];
     
-    // Standardvärden exakt från din bild
-    let targetData = JSON.parse(localStorage.getItem('master_target_fy27')) || {
+    let targetData = JSON.parse(localStorage.getItem('master_target_fy27_compact')) || {
         "Intäkter": [4854040, 3945205, 4660067, 3294763, 2841501, 3690804, 2707296, 3873455, 3315648, 1813615, 349638, 2051865],
         "Råvarukostnad": [-2233650, -1811996, -2144484, -1512655, -1306861, -1699330, -1240964, -1779850, -1526609, -828926, -154495, -941430],
         "Personalkostnader": [-1061611, -1061611, -1061611, -1071611, -893501, -893501, -893501, -891501, -901501, -891501, -35429, -891501],
@@ -123,53 +113,53 @@
         let personal = targetData["Personalkostnader"];
         let övrigt = targetData["Övriga kostnader"];
 
-        // 1. Intäkter
-        tbody.appendChild(createEditableRow("Intäkter", intäkter, false));
+        // 1. Intäkter (Excelliknande inmatning)
+        tbody.appendChild(createEditableRow("Intäkter", intäkter));
 
         // 2. Råvarukostnad
-        tbody.appendChild(createEditableRow("Råvarukostnad", råvaror, false));
+        tbody.appendChild(createEditableRow("Råvarukostnad", råvaror));
 
-        // 3. Råvarukostnad % (Råvaror / Intäkter)
+        // 3. Råvarukostnad % (Kopplad formel: Råvaror / Intäkter)
         let rawPct = intäkter.map((v, i) => v !== 0 ? råvaror[i] / v : 0);
         let rawPctTot = intäkter.reduce((a, b) => a + b, 0) !== 0 ? råvaror.reduce((a, b) => a + b, 0) / intäkter.reduce((a, b) => a + b, 0) : 0;
         tbody.appendChild(createCalculatedRow("Råvarukostnad %", rawPct, rawPctTot, true));
 
         // 4. Personalkostnader
-        tbody.appendChild(createEditableRow("Personalkostnader", personal, false));
+        tbody.appendChild(createEditableRow("Personalkostnader", personal));
 
-        // 5. Personalkostnad %
+        // 5. Personalkostnad % (Kopplad formel)
         let persPct = intäkter.map((v, i) => v !== 0 ? personal[i] / v : 0);
         let persPctTot = intäkter.reduce((a, b) => a + b, 0) !== 0 ? personal.reduce((a, b) => a + b, 0) / intäkter.reduce((a, b) => a + b, 0) : 0;
         tbody.appendChild(createCalculatedRow("Personalkostnad %", persPct, persPctTot, true));
 
         // 6. Övriga kostnader
-        tbody.appendChild(createEditableRow("Övriga kostnader", övrigt, false));
+        tbody.appendChild(createEditableRow("Övriga kostnader", övrigt));
 
-        // 7. Övriga kostnader %
+        // 7. Övriga kostnader % (Kopplad formel)
         let övrPct = intäkter.map((v, i) => v !== 0 ? övrigt[i] / v : 0);
         let övrPctTot = intäkter.reduce((a, b) => a + b, 0) !== 0 ? övrigt.reduce((a, b) => a + b, 0) / intäkter.reduce((a, b) => a + b, 0) : 0;
         tbody.appendChild(createCalculatedRow("Övriga kostnader %", övrPct, övrPctTot, true));
 
-        // 8. PI (Intäkter + Råvaror)
+        // 8. PI (Kopplad formel: Intäkter + Råvaror)
         let pi = intäkter.map((v, i) => v + råvaror[i]);
         tbody.appendChild(createCalculatedRow("PI", pi, pi.reduce((a, b) => a + b, 0), false));
 
-        // 9. PI % (PI / Intäkter)
+        // 9. PI % (Kopplad formel: PI / Intäkter)
         let piPct = intäkter.map((v, i) => v !== 0 ? pi[i] / v : 0);
         let piPctTot = intäkter.reduce((a, b) => a + b, 0) !== 0 ? pi.reduce((a, b) => a + b, 0) / intäkter.reduce((a, b) => a + b, 0) : 0;
         tbody.appendChild(createCalculatedRow("PI%", piPct, piPctTot, true));
 
-        // 10. Gross Profit (PI + Personal + Övrigt)
+        // 10. Gross Profit (Kopplad formel: PI + Personal + Övrigt)
         let gp = intäkter.map((v, i) => pi[i] + personal[i] + övrigt[i]);
         tbody.appendChild(createCalculatedRow("Gross Profit", gp, gp.reduce((a, b) => a + b, 0), false, true));
 
-        // 11. Gross Margin (Gross Profit / Intäkter)
+        // 11. Gross Margin (Kopplad formel: Gross Profit / Intäkter)
         let gpPct = intäkter.map((v, i) => v !== 0 ? gp[i] / v : 0);
         let gpPctTot = intäkter.reduce((a, b) => a + b, 0) !== 0 ? gp.reduce((a, b) => a + b, 0) / intäkter.reduce((a, b) => a + b, 0) : 0;
         tbody.appendChild(createCalculatedRow("Gross Margin", gpPct, gpPctTot, true, true));
     }
 
-    function createEditableRow(label, arr, isPct) {
+    function createEditableRow(label, arr) {
         let tr = document.createElement('tr');
         let html = `<td>${label}</td>`;
         let total = arr.reduce((a, b) => a + b, 0);
@@ -177,7 +167,7 @@
         arr.forEach((val, idx) => {
             html += `<td><input type="number" data-row="${label}" data-col="${idx}" value="${val}" oninput="liveUpdate()"></td>`;
         });
-        html += `<td style="font-weight: 700; color: #fff;">${fmt.format(total)}</td>`;
+        html += `<td style="font-weight: 700; color: #fff; text-align: right;" id="tot-${label}">${fmt.format(total)}</td>`;
         tr.innerHTML = html;
         return tr;
     }
@@ -188,9 +178,9 @@
         let html = `<td>${label}</td>`;
 
         arr.forEach(val => {
-            html += `<td>${isPct ? fmtPct(val) : fmt.format(val)}</td>`;
+            html += `<td style="text-align: right;">${isPct ? fmtPct(val) : fmt.format(val)}</td>`;
         });
-        html += `<td>${isPct ? fmtPct(totalVal) : fmt.format(totalVal)}</td>`;
+        html += `<td style="text-align: right;">${isPct ? fmtPct(totalVal) : fmt.format(totalVal)}</td>`;
         tr.innerHTML = html;
         return tr;
     }
@@ -206,8 +196,9 @@
     }
 
     function saveTarget() {
-        localStorage.setItem('master_target_fy27', JSON.stringify(targetData));
-        alert("Target sparats framgångsrikt!");
+        localStorage.setItem('master_target_fy27_compact', JSON.stringify(targetData));
+        document.getElementById('save-status').innerText = "✓ Sparat i webbläsaren!";
+        setTimeout(() => { document.getElementById('save-status').innerText = ""; }, 3000);
     }
 
     renderTable();
