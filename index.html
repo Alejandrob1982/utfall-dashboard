@@ -2,7 +2,7 @@
 <html lang="sv">
 <head>
     <meta charset="UTF-8">
-    <title>Target FY 27 — Fullt Redigerbar Modell</title>
+    <title>Target FY 27 — Excel-formler & Kopplingar</title>
     <style>
         :root {
             --glass-bg: rgba(255, 255, 255, 0.02);
@@ -23,6 +23,7 @@
 
         .header { text-align: center; margin-bottom: 20px; }
         .header h1 { font-weight: 600; font-size: 22px; color: #fff; margin: 0; }
+        .header p { font-size: 12px; color: #86868b; margin: 5px 0 0 0; }
 
         .table-container {
             background: var(--glass-bg);
@@ -38,11 +39,10 @@
             background: rgba(10, 17, 26, 0.95);
             color: var(--accent-blue); padding: 8px 4px; font-weight: 700;
             border-bottom: 1px solid var(--glass-border); text-align: right;
-            overflow: hidden; text-overflow: ellipsis;
         }
-        th:first-child { text-align: left; width: 140px; }
+        th:first-child { text-align: left; width: 150px; }
 
-        td { padding: 5px 4px; border-bottom: 1px solid rgba(255,255,255,0.04); color: #ccc; text-align: right; overflow: hidden; }
+        td { padding: 5px 4px; border-bottom: 1px solid rgba(255,255,255,0.04); color: #ccc; text-align: right; }
         td:first-child { text-align: left; font-weight: 600; color: #fff; }
 
         td input { 
@@ -51,7 +51,8 @@
             border: 1px solid var(--glass-border); border-radius: 6px; 
         }
 
-        .row-total { background: rgba(0, 122, 255, 0.08); font-weight: 700; color: #fff; border-top: 2px solid var(--accent-blue); }
+        .row-calc { background: rgba(0, 122, 255, 0.04); font-weight: 600; color: #70b0ff; }
+        .row-total { background: rgba(0, 122, 255, 0.1); font-weight: 700; color: #fff; border-top: 2px solid var(--accent-blue); }
 
         .actions { margin-top: 15px; display: flex; justify-content: space-between; align-items: center; }
         .status-msg { font-size: 11px; color: var(--accent-green); font-weight: bold; }
@@ -67,7 +68,10 @@
 <body>
 
 <div class="container">
-    <div class="header"><h1>Target FY 27 — Fullt Redigerbar Modell</h1></div>
+    <div class="header">
+        <h1>Target FY 27 — Modell med Excel-kopplingar</h1>
+        <p>Ändra grunddata (Intäkter, Råvaror, Personal, Övrigt) – alla procentsatser, PI och Gross Profit räknas automatiskt ut via formler.</p>
+    </div>
 
     <div class="table-container">
         <table id="target-table">
@@ -92,52 +96,113 @@
 <script>
     const months = ["Sep", "Okt", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr", "Maj", "Jun", "Jul", "Aug"];
     
-    // Samtliga rader är nu fullt redigerbara precis som i din Excel-fil
-    let targetData = JSON.parse(localStorage.getItem('master_target_fy27_editable')) || {
+    // Grunddata som du kan skriva in fritt (Inputs)
+    let baseData = JSON.parse(localStorage.getItem('master_target_base')) || {
         "Intäkter": [4854040, 3945205, 4660067, 3294763, 2841501, 3690804, 2707296, 3873455, 3315648, 1813615, 349638, 2051865],
         "Råvarukostnad": [-2233650, -1811996, -2144484, -1512655, -1306861, -1699330, -1240964, -1779850, -1526609, -828926, -154495, -941430],
-        "Råvarukostnad %": [-46.0, -45.9, -46.0, -45.9, -46.0, -46.0, -45.8, -45.9, -46.0, -45.7, -44.2, -45.9],
         "Personalkostnader": [-1061611, -1061611, -1061611, -1071611, -893501, -893501, -893501, -891501, -901501, -891501, -35429, -891501],
-        "Personalkostnad %": [-21.9, -26.9, -22.8, -32.5, -31.4, -24.2, -33.0, -23.0, -27.2, -49.2, -10.1, -43.4],
-        "Övriga kostnader": [-824160, -792030, -793560, -776730, -808860, -756330, -757860, -756330, -788460, -756330, -258570, -757860],
-        "Övriga kostnader %": [-17.0, -20.1, -17.0, -23.6, -28.5, -20.5, -28.0, -19.5, -23.8, -41.7, -74.0, -36.9],
-        "PI": [2620390, 2133209, 2515583, 1782108, 1534640, 1991474, 1466332, 2093605, 1789039, 984689, 195143, 1110435],
-        "PI%": [54.0, 54.1, 54.0, 54.1, 54.0, 54.0, 54.2, 54.1, 54.0, 54.3, 55.8, 54.1],
-        "Gross Profit": [734619, 279568, 660412, -66233, -167721, 341643, -185029, 445774, 99078, -663142, -98856, -538926],
-        "Gross Margin": [15.1, 7.1, 14.2, -2.0, -5.9, 9.3, -6.8, 11.5, 3.0, -36.6, -28.3, -26.3]
+        "Övriga kostnader": [-824160, -792030, -793560, -776730, -808860, -756330, -757860, -756330, -788460, -756330, -258570, -757860]
     };
 
     const fmt = new Intl.NumberFormat('sv-SE', { maximumFractionDigits: 0 });
+    const fmtPct = (val) => (val * 100).toFixed(1).replace('.', ',') + ' %';
 
     function renderTable() {
         const tbody = document.querySelector('#target-table tbody');
         tbody.innerHTML = '';
 
-        for (let rowName in targetData) {
-            let tr = document.createElement('tr');
-            let isTotal = (rowName === "Gross Profit" || rowName === "Gross Margin");
-            if (isTotal) tr.className = 'row-total';
+        let intäkter = baseData["Intäkter"];
+        let råvaror = baseData["Råvarukostnad"];
+        let personal = baseData["Personalkostnader"];
+        let övrigt = baseData["Övriga kostnader"];
 
-            let html = `<td>${rowName}</td>`;
-            let arr = targetData[rowName];
-            
-            // Summera totalt för året (för procentrader räknar vi ut ett snitt eller summa beroende på typ, här summerar vi eller visar total)
-            let totalVal = arr.reduce((a, b) => a + b, 0);
-            if (rowName.includes('%') || rowName === "Gross Margin") {
-                totalVal = arr.length > 0 ? arr.reduce((a, b) => a + b, 0) / arr.length : 0;
+        // 1. Intäkter (Inmatning)
+        tbody.appendChild(createInputRow("Intäkter", intäkter));
+
+        // 2. Råvarukostnad (Inmatning)
+        tbody.appendChild(createInputRow("Råvarukostnad", råvaror));
+
+        // 3. Råvarukostnad % -> Formel: (Råvarukostnad / Intäkter) * 100
+        let rawPct = intäkter.map((v, i) => v !== 0 ? (råvaror[i] / v) : 0);
+        tbody.appendChild(createCalcRow("Råvarukostnad %", rawPct, true));
+
+        // 4. Personalkostnader (Inmatning)
+        tbody.appendChild(createInputRow("Personalkostnader", personal));
+
+        // 5. Personalkostnad % -> Formel: (Personalkostnader / Intäkter) * 100
+        let persPct = intäkter.map((v, i) => v !== 0 ? (personal[i] / v) : 0);
+        tbody.appendChild(createCalcRow("Personalkostnad %", persPct, true));
+
+        // 6. Övriga kostnader (Inmatning)
+        tbody.appendChild(createInputRow("Övriga kostnader", övrigt));
+
+        // 7. Övriga kostnader % -> Formel: (Övriga kostnader / Intäkter) * 100
+        let övrPct = intäkter.map((v, i) => v !== 0 ? (övrigt[i] / v) : 0);
+        tbody.appendChild(createCalcRow("Övriga kostnader %", övrPct, true));
+
+        // 8. PI -> Formel: Intäkter + Råvarukostnad
+        let pi = intäkter.map((v, i) => v + råvaror[i]);
+        tbody.appendChild(createCalcRow("PI", pi, false));
+
+        // 9. PI% -> Formel: PI / Intäkter
+        let piPct = intäkter.map((v, i) => v !== 0 ? (pi[i] / v) : 0);
+        tbody.appendChild(createCalcRow("PI%", piPct, true));
+
+        // 10. Gross Profit -> Formel: PI + Personalkostnader + Övriga kostnader
+        let gp = intäkter.map((v, i) => pi[i] + personal[i] + övrigt[i]);
+        tbody.appendChild(createCalcRow("Gross Profit", gp, false, true));
+
+        // 11. Gross Margin -> Formel: Gross Profit / Intäkter
+        let gpPct = intäkter.map((v, i) => v !== 0 ? (gp[i] / v) : 0);
+        tbody.appendChild(createCalcRow("Gross Margin", gpPct, true, true));
+    }
+
+    function createInputRow(label, arr) {
+        let tr = document.createElement('tr');
+        let html = `<td>${label}</td>`;
+        let total = arr.reduce((a, b) => a + b, 0);
+
+        arr.forEach((val, idx) => {
+            html += `<td><input type="number" step="any" data-row="${label}" data-col="${idx}" value="${val}" oninput="liveUpdate()"></td>`;
+        });
+        html += `<td style="font-weight: 700; color: #fff; text-align: right;" id="tot-${label}">${fmt.format(total)}</td>`;
+        tr.innerHTML = html;
+        return tr;
+    }
+
+    function createCalcRow(label, arr, isPct, isTotalRow) {
+        let tr = document.createElement('tr');
+        if (isTotalRow) tr.className = 'row-total';
+        else tr.className = 'row-calc';
+
+        let html = `<td>${label}</td>`;
+        let totalVal = arr.reduce((a, b) => a + b, 0);
+        
+        // För procentsatser räknar vi ut totalår som total summa delat på totala intäkter (eller medelvärde)
+        if (isPct) {
+            let intäkterTot = baseData["Intäkter"].reduce((a, b) => a + b, 0);
+            let partTot = 0;
+            if (label.includes('Råvarukostnad')) partTot = baseData["Råvarukostnad"].reduce((a, b) => a + b, 0);
+            if (label.includes('Personalkostnad')) partTot = baseData["Personalkostnad"].reduce((a, b) => a + b, 0) || baseData["Personalkostnader"].reduce((a, b) => a + b, 0);
+            if (label.includes('Övriga kostnader')) partTot = baseData["Övriga kostnader"].reduce((a, b) => a + b, 0);
+            if (label.includes('PI%')) {
+                let piArr = baseData["Intäkter"].map((v, i) => v + baseData["Råvarukostnad"][i]);
+                partTot = piArr.reduce((a, b) => a + b, 0);
             }
-
-            arr.forEach((val, idx) => {
-                let displayVal = rowName.includes('%') || rowName === "Gross Margin" ? val.toFixed(1).replace('.', ',') + ' %' : val;
-                html += `<td><input type="number" step="any" data-row="${rowName}" data-col="${idx}" value="${val}" oninput="liveUpdate()"></td>`;
-            });
-
-            let displayTotal = rowName.includes('%') || rowName === "Gross Margin" ? totalVal.toFixed(1).replace('.', ',') + ' %' : fmt.format(totalVal);
-            html += `<td style="font-weight: 700; color: #fff; text-align: right;" id="tot-${rowName}">${displayTotal}</td>`;
-            
-            tr.innerHTML = html;
-            tbody.appendChild(tr);
+            if (label.includes('Gross Margin')) {
+                let piArr = baseData["Intäkter"].map((v, i) => v + baseData["Råvarukostnad"][i]);
+                let gpArr = baseData["Intäkter"].map((v, i) => piArr[i] + baseData["Personalkostnader"][i] + baseData["Övriga kostnader"][i]);
+                partTot = gpArr.reduce((a, b) => a + b, 0);
+            }
+            totalVal = intäkterTot !== 0 ? (partTot / intäkterTot) : 0;
         }
+
+        arr.forEach(val => {
+            html += `<td style="text-align: right;">${isPct ? fmtPct(val) : fmt.format(val)}</td>`;
+        });
+        html += `<td style="text-align: right;">${isPct ? fmtPct(totalVal) : fmt.format(totalVal)}</td>`;
+        tr.innerHTML = html;
+        return tr;
     }
 
     function liveUpdate() {
@@ -145,25 +210,13 @@
         inputs.forEach(input => {
             let row = input.getAttribute('data-row');
             let col = parseInt(input.getAttribute('data-col'));
-            targetData[row][col] = parseFloat(input.value) || 0;
+            baseData[row][col] = parseFloat(input.value) || 0;
         });
-
-        // Uppdatera totalåret dynamiskt direkt i tabellen när man skriver
-        for (let rowName in targetData) {
-            let arr = targetData[rowName];
-            let totalVal = arr.reduce((a, b) => a + b, 0);
-            if (rowName.includes('%') || rowName === "Gross Margin") {
-                totalVal = arr.length > 0 ? arr.reduce((a, b) => a + b, 0) / arr.length : 0;
-            }
-            let totCell = document.getElementById(`tot-${rowName}`);
-            if (totCell) {
-                totCell.innerText = rowName.includes('%') || rowName === "Gross Margin" ? totalVal.toFixed(1).replace('.', ',') + ' %' : fmt.format(totalVal);
-            }
-        }
+        renderTable(); // Räknar om alla formler och kopplingar direkt i realtid
     }
 
     function saveTarget() {
-        localStorage.setItem('master_target_fy27_editable', JSON.stringify(targetData));
+        localStorage.setItem('master_target_base', JSON.stringify(baseData));
         document.getElementById('save-status').innerText = "✓ Sparat i webbläsaren!";
         setTimeout(() => { document.getElementById('save-status').innerText = ""; }, 3000);
     }
