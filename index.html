@@ -10,6 +10,7 @@
             --accent-blue: #007aff;
             --accent-green: #34c759;
             --accent-orange: #ff9500;
+            --accent-red: #ff3b30;
             --bg-deep: #000205;
         }
 
@@ -63,11 +64,10 @@
         .form-container {
             background: var(--glass-bg); backdrop-filter: blur(30px);
             border: 1px solid var(--glass-border); border-radius: 24px;
-            padding: 25px; margin-bottom: 30px; display: grid; grid-template-columns: repeat(5, 1fr); gap: 15px; align-items: end;
+            padding: 25px; margin-bottom: 30px; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr auto; gap: 15px; align-items: end;
         }
         .form-group { display: flex; flex-direction: column; gap: 6px; }
         .form-group label { font-size: 11px; font-weight: 700; color: #86868b; text-transform: uppercase; }
-        .form-group input, .form-group select { width: 100%; box-sizing: border-box; }
 
         .btn-add {
             background: var(--accent-blue); color: #fff; border: none;
@@ -75,6 +75,20 @@
             text-transform: uppercase; font-size: 13px; transition: opacity 0.3s;
         }
         .btn-add:hover { opacity: 0.8; }
+
+        .customer-mgmt {
+            background: var(--glass-bg); backdrop-filter: blur(30px);
+            border: 1px solid var(--glass-border); border-radius: 24px;
+            padding: 20px 25px; margin-bottom: 30px; display: flex; gap: 15px; align-items: center;
+        }
+        .btn-cust {
+            background: rgba(52, 199, 89, 0.15); color: var(--accent-green); border: 1px solid rgba(52, 199, 89, 0.3);
+            padding: 10px 18px; border-radius: 12px; font-weight: 700; cursor: pointer; font-size: 12px;
+        }
+        .btn-cust-del {
+            background: rgba(255, 59, 48, 0.15); color: var(--accent-red); border: 1px solid rgba(255, 59, 48, 0.3);
+            padding: 10px 18px; border-radius: 12px; font-weight: 700; cursor: pointer; font-size: 12px;
+        }
 
         .section-row { margin-bottom: 40px; }
         .row-header {
@@ -107,7 +121,7 @@
             border-bottom: 1px solid var(--glass-border);
         }
         td { padding: 12px 15px; border-bottom: 1px solid rgba(255,255,255,0.05); color: #ccc; }
-        .btn-del { background: rgba(255,59,48,0.2); color: #ff3b30; border: none; padding: 6px 12px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        .btn-del { background: rgba(255,59,48,0.2); color: var(--accent-red); border: none; padding: 6px 12px; border-radius: 8px; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -127,18 +141,10 @@
         <div class="select-group">
             <select id="cust-select"><option value="ALLA">Hela Portföljen</option></select>
             <select id="month-select">
-                <option value="Sep">Sep</option>
-                <option value="Okt">Okt</option>
-                <option value="Nov">Nov</option>
-                <option value="Dec">Dec</option>
-                <option value="Jan" selected>Jan</option>
-                <option value="Feb">Feb</option>
-                <option value="Mar">Mar</option>
-                <option value="Apr">Apr</option>
-                <option value="Maj">Maj</option>
-                <option value="Jun">Jun</option>
-                <option value="Jul">Jul</option>
-                <option value="Aug">Aug</option>
+                <option value="Sep">Sep</option><option value="Okt">Okt</option><option value="Nov">Nov</option>
+                <option value="Dec">Dec</option><option value="Jan" selected>Jan</option><option value="Feb">Feb</option>
+                <option value="Mar">Mar</option><option value="Apr">Apr</option><option value="Maj">Maj</option>
+                <option value="Jun">Jun</option><option value="Jul">Jul</option><option value="Aug">Aug</option>
             </select>
         </div>
     </div>
@@ -159,10 +165,17 @@
 
     <!-- Data & Inmatningsvy -->
     <div id="data-view" style="display: none;">
+        <!-- Kundhantering -->
+        <div class="customer-mgmt">
+            <div style="font-size: 12px; font-weight: 700; color: #86868b; text-transform: uppercase;">Kundregister:</div>
+            <button class="btn-cust" onclick="addNewCustomerModal()">+ Lägg till ny kund</button>
+            <button class="btn-cust-del" onclick="deleteCustomerModal()">Ta bort befintlig kund</button>
+        </div>
+
         <div class="form-container">
             <div class="form-group">
-                <label>Kund / Verksamhet</label>
-                <input type="text" id="inp-cust" placeholder="T.ex. Adolf Fredriks">
+                <label>Välj Kund / Verksamhet</label>
+                <select id="inp-cust"></select>
             </div>
             <div class="form-group">
                 <label>Månad</label>
@@ -181,7 +194,7 @@
                 <label>Target (Mål)</label>
                 <input type="number" id="inp-tar" placeholder="0">
             </div>
-            <button class="btn-add" onclick="addEntry()">Lägg till / Uppdatera</button>
+            <button class="btn-add" onclick="addEntry()">Spara Post</button>
         </div>
 
         <div class="table-container">
@@ -198,10 +211,8 @@
 </div>
 
 <script>
-    let dbData = JSON.parse(localStorage.getItem('internal_dashboard_db')) || [
-        { cust: "Adolf Fredriks", mon: "Jan", utfall: 608367, target: 616423 },
-        { cust: "Hässelby", mon: "Jan", utfall: 499893, target: 512000 }
-    ];
+    let customersList = JSON.parse(localStorage.getItem('internal_dashboard_cust')) || ["Adolf Fredriks", "Hässelby"];
+    let dbData = JSON.parse(localStorage.getItem('internal_dashboard_db')) || [];
 
     const fmt = new Intl.NumberFormat('sv-SE', { style: 'currency', currency: 'SEK', maximumFractionDigits: 0 });
 
@@ -220,21 +231,57 @@
 
     function saveData() {
         localStorage.setItem('internal_dashboard_db', JSON.stringify(dbData));
+        localStorage.setItem('internal_dashboard_cust', JSON.stringify(customersList));
+    }
+
+    function addNewCustomerModal() {
+        let name = prompt("Ange namn på den nya kunden/verksamheten:");
+        if (name && name.trim() !== "") {
+            name = name.trim();
+            if (!customersList.includes(name)) {
+                customersList.push(name);
+                customersList.sort();
+                saveData();
+                initDropdowns();
+                alert("Kunden har lagts till!");
+            } else {
+                alert("Kunden finns redan i registret.");
+            }
+        }
+    }
+
+    function deleteCustomerModal() {
+        let name = prompt("Vilken kund vill du ta bort? (Exakt namn):\n\nTillgängliga kunder:\n" + customersList.join(", "));
+        if (name && name.trim() !== "") {
+            name = name.trim();
+            if (customersList.includes(name)) {
+                if (confirm(`Är du säker på att du vill ta bort "${name}" och alla dess sparade poster?`)) {
+                    customersList = customersList.filter(c => c !== name);
+                    dbData = dbData.filter(item => item.cust !== name);
+                    saveData();
+                    initDropdowns();
+                    updateUI();
+                    buildTable();
+                    alert("Kunden har tagits bort.");
+                }
+            } else {
+                alert("Hittade inte kunden i registret.");
+            }
+        }
     }
 
     function addEntry() {
-        const cust = document.getElementById('inp-cust').value.trim();
+        const cust = document.getElementById('inp-cust').value;
         const mon = document.getElementById('inp-mon').value;
         const utfall = parseFloat(document.getElementById('inp-utf').value) || 0;
         const target = parseFloat(document.getElementById('inp-tar').value) || 0;
 
         if (!cust) {
-            alert("Ange kundens namn!");
+            alert("Välj en kund först!");
             return;
         }
 
-        // Kolla om posten redan finns för samma kund och månad, uppdatera i så fall
-        let existing = dbData.find(item => item.cust.toLowerCase() === cust.toLowerCase() && item.mon === mon);
+        let existing = dbData.find(item => item.cust === cust && item.mon === mon);
         if (existing) {
             existing.utfall = utfall;
             existing.target = target;
@@ -243,40 +290,44 @@
         }
 
         saveData();
-        initDropdowns();
         updateUI();
         buildTable();
 
-        // Rensa fält
-        document.getElementById('inp-cust').value = '';
         document.getElementById('inp-utf').value = '';
         document.getElementById('inp-tar').value = '';
+        alert("Posten sparad!");
     }
 
     function deleteEntry(index) {
         dbData.splice(index, 1);
         saveData();
-        initDropdowns();
         updateUI();
         buildTable();
     }
 
     function initDropdowns() {
+        // Filter-rullgardin
         const custS = document.getElementById('cust-select');
         const currentVal = custS.value;
         custS.innerHTML = '<option value="ALLA">Hela Portföljen</option>';
         
-        let customers = [...new Set(dbData.map(item => item.cust))].sort();
-        customers.forEach(k => {
-            const opt = document.createElement('option');
-            opt.value = k; opt.text = k;
-            if (k === currentVal) opt.selected = true;
-            custS.appendChild(opt);
+        // Inmatnings-rullgardin
+        const inpS = document.getElementById('inp-cust');
+        inpS.innerHTML = '';
+
+        customersList.forEach(k => {
+            const opt1 = document.createElement('option');
+            opt1.value = k; opt1.text = k;
+            if (k === currentVal) opt1.selected = true;
+            custS.appendChild(opt1);
+
+            const opt2 = document.createElement('option');
+            opt2.value = k; opt2.text = k;
+            inpS.appendChild(opt2);
         });
     }
 
     function updateUI() {
-        if (dbData.length === 0) return;
         const cust = document.getElementById('cust-select').value;
         const mon = document.getElementById('month-select').value;
         
@@ -286,7 +337,7 @@
         let totalTarget = 0;
 
         dbData.forEach(item => {
-            let matchCust = (cust === 'ALLA') || (item.cust.toLowerCase() === cust.toLowerCase());
+            let matchCust = (cust === 'ALLA') || (item.cust === cust);
             let matchMon = (item.mon === mon);
 
             if (matchCust && matchMon) {
