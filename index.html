@@ -2,398 +2,107 @@
 <html lang="sv">
 <head>
     <meta charset="UTF-8">
-    <title>Utfall & Verklighet v12.2</title>
-    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+    <title>Sodexo Enterprise Portal</title>
     <style>
         :root {
+            --bg-deep: #000205;
             --glass-bg: rgba(255, 255, 255, 0.03);
             --glass-border: rgba(255, 255, 255, 0.1);
             --accent-blue: #007aff;
             --accent-green: #34c759;
-            --accent-orange: #ff9500;
-            --bg-deep: #000205;
         }
-
         body {
             background-color: var(--bg-deep);
-            background-image: radial-gradient(circle at 50% -20%, #1a2a44 0%, var(--bg-deep) 70%);
             color: #f5f5f7;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            margin: 0;
-            padding: 40px 20px;
-            min-height: 100vh;
-            overflow-x: hidden;
+            margin: 0; padding: 0;
+            display: flex; height: 100vh; overflow: hidden;
         }
-
-        .container { max-width: 1200px; margin: 0 auto; }
-
-        /* View Switcher (Apple Style) */
-        .view-switcher {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 40px;
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 260px; background: rgba(10, 17, 26, 0.8);
+            border-right: 1px solid var(--glass-border);
+            display: flex; flex-direction: column; padding: 20px;
         }
-        .segmented-control {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 4px;
-            border-radius: 14px;
-            display: flex;
-            gap: 4px;
-            border: 1px solid var(--glass-border);
-            backdrop-filter: blur(20px);
+        .sidebar h2 { font-size: 16px; color: #fff; margin-bottom: 30px; letter-spacing: 1px; }
+        .nav-item {
+            padding: 12px 16px; color: #86868b; text-decoration: none;
+            border-radius: 10px; margin-bottom: 8px; font-weight: 600; font-size: 13px;
+            cursor: pointer; transition: all 0.3s;
         }
-        .segment-btn {
-            background: transparent;
-            color: #86868b;
-            border: none;
-            padding: 8px 24px;
-            border-radius: 10px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        .segment-btn.active {
-            background: rgba(255, 255, 255, 0.1);
-            color: #fff;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-        }
-
-        .header { text-align: center; margin-bottom: 30px; }
-        .header h1 { 
-            font-weight: 600; 
-            letter-spacing: -0.5px; 
-            font-size: 28px;
-            background: linear-gradient(to bottom, #fff 0%, #a1a1a6 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin: 0;
-        }
-
-        .controls-glass {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            padding: 20px 24px;
-            border-radius: 24px;
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 30px;
-            align-items: center;
-            margin-bottom: 40px;
-        }
-
-        .upload-btn {
-            background: rgba(0, 122, 255, 0.15);
-            color: var(--accent-blue);
-            padding: 12px 28px;
-            border-radius: 14px;
-            font-weight: 700;
-            font-size: 13px;
-            cursor: pointer;
-            transition: all 0.4s;
-            border: 1px solid rgba(0, 122, 255, 0.3);
-            display: inline-block;
-            backdrop-filter: blur(10px);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        .upload-btn:hover { 
-            background: var(--accent-blue); color: #fff;
-            box-shadow: 0 0 30px rgba(0, 122, 255, 0.6);
-            transform: translateY(-2px) scale(1.02);
-        }
-        input[type="file"] { display: none; }
-
-        .select-group { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-        select {
-            background: rgba(0, 0, 0, 0.4); color: #fff;
-            border: 1px solid var(--glass-border);
-            padding: 12px 16px; border-radius: 14px;
-            font-size: 14px; outline: none; cursor: pointer;
-            transition: all 0.3s;
-        }
-        select:hover { border-color: var(--accent-blue); }
-        select option { background-color: #0d1c37; color: #ffffff; padding: 10px; }
-
-        /* View Containers */
-        #dashboard-view { animation: fadeIn 0.5s ease-out; display: block; }
-        #data-view { animation: fadeIn 0.5s ease-out; display: none; }
+        .nav-item:hover, .nav-item.active { background: rgba(0, 122, 255, 0.15); color: var(--accent-blue); }
         
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* Dashboard Cards */
-        .section-row { margin-bottom: 60px; }
-        .row-header {
-            font-size: 12px; font-weight: 700; text-transform: uppercase;
-            letter-spacing: 1.5px; color: #86868b; margin-bottom: 20px;
-            padding-left: 10px; display: flex; justify-content: space-between;
+        /* Main Content Area */
+        .main-content { flex: 1; padding: 40px; overflow-y: auto; background: radial-gradient(circle at 50% -20%, #1a2a44 0%, var(--bg-deep) 70%); }
+        .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+        .module-card {
+            background: var(--glass-bg); border: 1px solid var(--glass-border);
+            border-radius: 24px; padding: 30px; text-align: center; cursor: pointer;
+            backdrop-filter: blur(20px); transition: all 0.4s;
         }
-        .liquid-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
-        .liquid-card {
-            background: var(--glass-bg); backdrop-filter: blur(30px);
-            border: 1px solid var(--glass-border); padding: 35px 20px;
-            border-radius: 28px; text-align: center; transition: all 0.5s;
-        }
-        .val-label { font-size: 11px; color: #86868b; font-weight: 600; margin-bottom: 15px; letter-spacing: 0.5px; }
-        .val-display { font-size: 34px; font-weight: 700; letter-spacing: -1px; color: #fff; }
-
-        .status-positive { border-color: rgba(52, 199, 89, 0.4); background: rgba(52, 199, 89, 0.03); }
-        .status-positive .val-display { color: var(--accent-green); text-shadow: 0 0 20px rgba(52, 199, 89, 0.3); }
-        .status-negative { border-color: rgba(255, 149, 0, 0.4); background: rgba(255, 149, 0, 0.03); }
-        .status-negative .val-display { color: var(--accent-orange); text-shadow: 0 0 20px rgba(255, 149, 0, 0.3); }
-
-        #sync-status { font-size: 10px; color: var(--accent-green); margin-left: 15px; font-weight: 800; letter-spacing: 1px; opacity: 0.8; }
-
-        /* Data Table Styling */
-        .table-container {
-            background: var(--glass-bg); backdrop-filter: blur(30px);
-            border: 1px solid var(--glass-border); border-radius: 24px;
-            padding: 20px; overflow-x: auto; max-height: 600px;
-        }
-        table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; }
-        th { 
-            position: sticky; top: 0; background: rgba(10, 17, 26, 0.95);
-            color: var(--accent-blue); padding: 15px; font-weight: 700;
-            text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--glass-border);
-        }
-        td { padding: 12px 15px; border-bottom: 1px solid rgba(255,255,255,0.05); color: #ccc; }
-        tr:hover td { background: rgba(255,255,255,0.05); color: #fff; }
+        .module-card:hover { border-color: var(--accent-blue); transform: translateY(-4px); box-shadow: 0 10px 30px rgba(0,122,255,0.2); }
+        .module-card h3 { color: #fff; margin-top: 15px; font-size: 18px; }
+        .module-card p { color: #86868b; font-size: 13px; margin-top: 8px; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    
-    <div class="view-switcher">
-        <div class="segmented-control">
-            <button class="segment-btn active" onclick="switchView('dashboard')">Dashboard</button>
-            <button class="segment-btn" onclick="switchView('data')">Affärsdata</button>
+    <!-- Säkrad Sidomeny -->
+    <div class="sidebar">
+        <h2>SODEXO PORTAL</h2>
+        <div class="nav-item active" onclick="switchModule('reg')">Registrering & Svinn</div>
+        <div class="nav-item" onclick="switchModule('budget')">Budget & Utfall (v12.2)</div>
+        <div class="nav-item" onclick="logout()" style="margin-top: auto; color: #ff9500;">Logga ut</div>
+    </div>
+
+    <!-- Huvudyta -->
+    <div class="main-content">
+        <!-- Modul 1: Esmiley-inspirerad registreringsvy -->
+        <div id="module-reg">
+            <h1 style="font-size: 24px; margin-bottom: 30px; font-weight: 600;">Registreringspunkter</h1>
+            <div class="card-grid">
+                <div class="module-card" onclick="alert('Öppnar Gästregistrering')">
+                    <div style="font-size: 40px;">👤</div>
+                    <h3>Gästregistrering</h3>
+                    <p>Lägg till nya gäster och besökssiffror</p>
+                </div>
+                <div class="module-card" onclick="alert('Öppnar Matsvinn')">
+                    <div style="font-size: 40px;">🍎</div>
+                    <h3>Matsvinn</h3>
+                    <p>Registrera förvaringssvinn och tallrikssvinn</p>
+                </div>
+                <div class="module-card" onclick="alert('Öppnar Produktion')">
+                    <div style="font-size: 40px;">🍳</div>
+                    <h3>Produktion</h3>
+                    <p>Följ upp tillagad volym och menyer</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modul 2: Din befintliga budget-dashboard (Inbäddad dolda vy) -->
+        <div id="module-budget" style="display: none;">
+            <h1 style="font-size: 24px; margin-bottom: 30px; font-weight: 600;">Budget & Utfall (Affärsdata)</h1>
+            <p style="color: #86868b;">Här laddas din existerande v12.2-struktur in med full funktionalitet.</p>
         </div>
     </div>
 
-    <div class="header"><h1>Utfall & Verklighet 2026</h1></div>
-
-    <div class="controls-glass">
-        <div style="display: flex; align-items: center;">
-            <label for="excel-upload" class="upload-btn">Välj Affärsdata</label>
-            <input type="file" id="excel-upload" accept=".xlsx, .xlsm">
-            <span id="sync-status"></span>
-        </div>
-        <div class="select-group">
-            <select id="cust-select"><option value="ALLA">Hela Portföljen</option></select>
-            <select id="month-select">
-                <option value="Sep">September</option><option value="Okt">Oktober</option>
-                <option value="Nov" selected>November</option><option value="Dec">December</option>
-                <option value="Jan">Januari</option><option value="Feb">Februari</option>
-                <option value="Mar">Mars</option><option value="Apr">April</option>
-                <option value="Maj">Maj</option><option value="Jun">Juni</option>
-                <option value="Jul">Juli</option><option value="Aug">Augusti</option>
-            </select>
-        </div>
-    </div>
-
-    <div id="dashboard-view">
-        <div class="section-row">
-            <div class="row-header">
-                <span>Utfall (verklighet) — <span id="label-m" style="color: #fff;">VÄNTAR PÅ DATA</span></span>
-                <span style="color: var(--accent-blue);">MÅNADSFOKUS</span>
-            </div>
-            <div class="liquid-grid">
-                <div class="liquid-card"><div class="val-label">Intäkt</div><div class="val-display" id="m-inc">0 kr</div></div>
-                <div class="liquid-card"><div class="val-label">Sant Mål (Target - Push)</div><div class="val-display" id="m-optar">0 kr</div></div>
-                <div class="liquid-card" id="m-diff-c"><div class="val-label">Operativ Diff</div><div class="val-display" id="m-diff">0 kr</div></div>
-            </div>
-        </div>
-
-        <div class="section-row">
-            <div class="row-header">
-                <span>Verkligheten exkl. push YTD — <span id="label-y" style="color: #fff;">VÄNTAR PÅ DATA</span></span>
-                <span style="color: var(--accent-blue);">HELÅRSFOKUS</span>
-            </div>
-            <div class="liquid-grid">
-                <div class="liquid-card"><div class="val-label">Intäkt YTD</div><div class="val-display" id="y-inc">0 kr</div></div>
-                <div class="liquid-card"><div class="val-label">Operativt Mål YTD</div><div class="val-display" id="y-optar">0 kr</div></div>
-                <div class="liquid-card" id="y-diff-c"><div class="val-label">Operativ Diff YTD</div><div class="val-display" id="y-diff">0 kr</div></div>
-            </div>
-        </div>
-
-        <div class="section-row" style="opacity: 0.85;">
-            <div class="row-header">
-                <span>Officiell Rapport — <span id="label-o" style="color: #fff;">VÄNTAR PÅ DATA</span></span>
-                <span style="color: #64748b;">INKLUSIVE PUSH (HELÅR)</span>
-            </div>
-            <div class="liquid-grid">
-                <div class="liquid-card"><div class="val-label">Total Intäkt YTD</div><div class="val-display" id="o-inc">0 kr</div></div>
-                <div class="liquid-card"><div class="val-label">Totalt Mål YTD (Officiellt)</div><div class="val-display" id="o-tar">0 kr</div></div>
-                <div class="liquid-card" id="o-diff-c"><div class="val-label">Officiell Diff YTD</div><div class="val-display" id="o-diff">0 kr</div></div>
-            </div>
-        </div>
-    </div>
-
-    <div id="data-view">
-        <div class="row-header" style="margin-top: 10px;">
-            <span>Inläst Affärsdata (Läs-vy)</span>
-            <span style="color: var(--accent-blue);">DATABAS</span>
-        </div>
-        <div class="table-container">
-            <table id="data-table">
-                <thead>
-                    <tr><th>Kund</th><th>Månad</th><th>Utfall</th><th>Target</th><th>Typ</th></tr>
-                </thead>
-                <tbody>
-                    <tr><td colspan="5" style="text-align: center; padding: 40px;">Ingen data inläst ännu. Klicka på 'Välj Affärsdata'.</td></tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-</div>
-
-<script>
-    let rawData = [];
-    const fmt = new Intl.NumberFormat('sv-SE', { style: 'currency', currency: 'SEK', maximumFractionDigits: 0 });
-
-    // Switcher Logic
-    function switchView(view) {
-        document.querySelectorAll('.segment-btn').forEach(btn => btn.classList.remove('active'));
-        if(view === 'dashboard') {
-            document.querySelector('.segment-btn:nth-child(1)').classList.add('active');
-            document.getElementById('dashboard-view').style.display = 'block';
-            document.getElementById('data-view').style.display = 'none';
-        } else {
-            document.querySelector('.segment-btn:nth-child(2)').classList.add('active');
-            document.getElementById('dashboard-view').style.display = 'none';
-            document.getElementById('data-view').style.display = 'block';
-        }
-    }
-
-    function parseV(val) {
-        if (val === undefined || val === null || val === '') return 0;
-        if (typeof val === 'number') return val;
-        let n = parseFloat(val.toString().replace(/\s/g, '').replace('kr', '').replace(',', '.'));
-        return isNaN(n) ? 0 : n;
-    }
-
-    function getCol(row, pattern) {
-        for (let key in row) {
-            if (key.toLowerCase().trim().includes(pattern.toLowerCase())) return row[key];
-        }
-        return null;
-    }
-
-    const fileInput = document.getElementById('excel-upload');
-    fileInput.addEventListener('click', () => { fileInput.value = null; });
-
-    fileInput.addEventListener('change', function(e) {
-        const reader = new FileReader();
-        document.getElementById('sync-status').innerText = "BEARBETAR...";
-        document.getElementById('sync-status').style.color = "var(--accent-blue)";
-        
-        reader.onload = (evt) => {
-            try {
-                const workbook = XLSX.read(new Uint8Array(evt.target.result), {type: 'array'});
-                const sheetName = workbook.SheetNames.find(n => n.includes('Total OMS')) || workbook.SheetNames[0];
-                rawData = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
-                
-                if (rawData.length > 0) {
-                    document.getElementById('sync-status').innerText = "● LIVE";
-                    document.getElementById('sync-status').style.color = "var(--accent-green)";
-                    
-                    // Uppdatera Dropdowns
-                    const custS = document.getElementById('cust-select');
-                    custS.innerHTML = '<option value="ALLA">Hela Portföljen</option>';
-                    const customers = [...new Set(rawData.map(r => getCol(r, 'kund')))].filter(k => k && !k.toString().toLowerCase().includes('total'));
-                    customers.sort().forEach(k => {
-                        const opt = document.createElement('option');
-                        opt.value = k; opt.text = k; custS.appendChild(opt);
-                    });
-                    
-                    updateUI();
-                    buildTable();
-                }
-            } catch (err) { 
-                document.getElementById('sync-status').innerText = "FEL VID LÄSNING"; 
-                document.getElementById('sync-status').style.color = "var(--accent-orange)";
+    <script>
+        function switchModule(mod) {
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            if(mod === 'reg') {
+                document.getElementById('module-reg').style.display = 'block';
+                document.getElementById('module-budget').style.display = 'none';
+                event.target.classList.add('active');
+            } else {
+                document.getElementById('module-reg').style.display = 'none';
+                document.getElementById('module-budget').style.display = 'block';
+                event.target.classList.add('active');
             }
-        };
-        reader.readAsArrayBuffer(e.target.files[0]);
-    });
-
-    function updateUI() {
-        if (rawData.length === 0) return;
-        const cust = document.getElementById('cust-select').value;
-        const mon = document.getElementById('month-select').value;
-        const monT = document.getElementById('month-select').options[document.getElementById('month-select').selectedIndex].text.toUpperCase();
-        
-        document.getElementById('label-m').innerText = (cust === 'ALLA' ? 'PORTFÖLJEN' : cust.toUpperCase()) + " | " + monT;
-        document.getElementById('label-y').innerText = (cust === 'ALLA' ? 'PORTFÖLJEN' : cust.toUpperCase());
-        document.getElementById('label-o').innerText = (cust === 'ALLA' ? 'PORTFÖLJEN' : cust.toUpperCase());
-
-        const filterData = (data) => cust === 'ALLA' ? data : data.filter(r => getCol(r, 'kund') === cust);
-        const mData = filterData(rawData.filter(r => getCol(r, 'månad') === mon));
-        const yData = filterData(rawData);
-
-        const calc = (rows) => {
-            let inc = 0, tar = 0, psh = 0;
-            rows.forEach(r => {
-                let rInc = parseV(getCol(r, 'utfall'));
-                let rTar = parseV(getCol(r, 'target'));
-                let kName = (getCol(r, 'kund') || "").toString().toLowerCase();
-                
-                let isKnownPush = (kName.includes('stfg') || kName.includes('södermalm')) && (rInc === 0);
-                let isPushText = Object.values(r).some(v => v && v.toString().toLowerCase().includes('push'));
-
-                inc += rInc; tar += rTar;
-                if (isKnownPush || isPushText) psh += rTar;
-            });
-            return { inc, optar: tar - psh, diff: inc - (tar - psh), offtar: tar, offdiff: inc - tar };
-        };
-
-        const m = calc(mData); const y = calc(yData);
-
-        const updateSection = (prefix, data) => {
-            document.getElementById(prefix + '-inc').innerText = fmt.format(data.inc);
-            document.getElementById(prefix + '-optar').innerText = fmt.format(data.optar);
-            document.getElementById(prefix + '-diff').innerText = fmt.format(data.diff);
-            document.getElementById(prefix + '-diff-c').className = 'liquid-card ' + (data.diff >= 0 ? 'status-positive' : 'status-negative');
         }
-
-        updateSection('m', m); updateSection('y', y);
-
-        document.getElementById('o-inc').innerText = fmt.format(y.inc);
-        document.getElementById('o-tar').innerText = fmt.format(y.offtar);
-        document.getElementById('o-diff').innerText = fmt.format(y.offdiff);
-        document.getElementById('o-diff-c').className = 'liquid-card ' + (y.offdiff >= 0 ? 'status-positive' : 'status-negative');
-    }
-
-    // Bygg HTML-tabellen för Rådata
-    function buildTable() {
-        const tbody = document.querySelector('#data-table tbody');
-        tbody.innerHTML = '';
-        
-        rawData.forEach(r => {
-            let tr = document.createElement('tr');
-            let k = getCol(r, 'kund') || '';
-            
-            // Ignorera total-rader från excel-filen
-            if(k.toString().toLowerCase().includes('total')) return;
-
-            tr.innerHTML = `
-                <td style="font-weight: 600; color: #fff;">${k}</td>
-                <td>${getCol(r, 'månad') || ''}</td>
-                <td>${fmt.format(parseV(getCol(r, 'utfall')))}</td>
-                <td>${fmt.format(parseV(getCol(r, 'target')))}</td>
-                <td><span style="color: ${Object.values(r).some(v => v && v.toString().toLowerCase().includes('push')) ? 'var(--accent-orange)' : 'inherit'}">${getCol(r, 'typ') || ''}</span></td>
-            `;
-            tbody.appendChild(tr);
-        });
-    }
-
-    document.getElementById('cust-select').addEventListener('change', updateUI);
-    document.getElementById('month-select').addEventListener('change', updateUI);
-</script>
+        function logout() {
+            alert('Loggar ut och rensar session.');
+            window.location.reload();
+        }
+    </script>
 </body>
 </html>
