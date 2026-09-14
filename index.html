@@ -2,7 +2,7 @@
 <html lang="sv">
 <head>
     <meta charset="UTF-8">
-    <title>Utfall & Verklighet v12.3</title>
+    <title>Utfall & Verklighet 2026</title>
     <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
     <style>
         :root {
@@ -197,8 +197,6 @@
         const reader = new FileReader();
         reader.onload = (evt) => {
             const workbook = XLSX.read(new Uint8Array(evt.target.result), {type: 'array'});
-            
-            // Försök läsa blad 2 eller det som innehåller kunddata baserat på din nya filstruktur
             const sheetName = workbook.SheetNames.length > 1 ? workbook.SheetNames[1] : workbook.SheetNames[0];
             const sheet = workbook.Sheets[sheetName];
             rawData = XLSX.utils.sheet_to_json(sheet);
@@ -227,7 +225,6 @@
         const custS = document.getElementById('cust-select');
         custS.innerHTML = '<option value="ALLA">Hela Portföljen</option>';
         
-        // Hämta unika kunder från kolumner som innehåller kundnamn
         let customers = new Set();
         rawData.forEach(r => {
             for (let key in r) {
@@ -254,16 +251,16 @@
         let totalTarget = 0;
 
         rawData.forEach(r => {
-            // Identifiera matchande rader baserat på valda filter
             let matchCust = (cust === 'ALLA') || Object.values(r).some(val => val && val.toString().toLowerCase() === cust.toLowerCase());
             let matchMon = Object.values(r).some(val => val && val.toString().toLowerCase().includes(mon.toLowerCase()));
 
             if (matchCust && matchMon) {
                 for (let key in r) {
-                    if (key.toLowerCase().includes('oms') || key.toLowerCase().includes('utfall')) {
+                    let lKey = key.toLowerCase();
+                    if (lKey.includes('oms') || lKey.includes('utfall')) {
                         totalUtfall += parseV(r[key]);
                     }
-                    if (key.toLowerCase().includes('target')) {
+                    if (lKey.includes('target')) {
                         totalTarget += parseV(r[key]);
                     }
                 }
