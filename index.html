@@ -22,7 +22,7 @@
             margin: 0; padding: 40px 20px; min-height: 100vh; overflow-x: hidden;
         }
 
-        .container { max-width: 1300px; margin: 0 auto; }
+        .container { max-width: 1400px; margin: 0 auto; }
 
         .view-switcher { display: flex; justify-content: center; margin-bottom: 30px; }
         .segmented-control {
@@ -30,8 +30,8 @@
             display: flex; gap: 4px; border: 1px solid var(--glass-border); backdrop-filter: blur(20px);
         }
         .segment-btn {
-            background: transparent; color: #86868b; border: none; padding: 8px 20px;
-            border-radius: 10px; font-size: 12px; font-weight: 600; cursor: pointer;
+            background: transparent; color: #86868b; border: none; padding: 8px 24px;
+            border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer;
             transition: all 0.3s; text-transform: uppercase; letter-spacing: 1px;
         }
         .segment-btn.active {
@@ -46,68 +46,31 @@
             -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0;
         }
 
-        .controls-glass {
-            background: var(--glass-bg); backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border); padding: 20px 24px;
-            border-radius: 24px; display: flex; justify-content: space-between;
-            align-items: center; margin-bottom: 30px; gap: 20px;
-        }
-
-        .select-group { display: flex; gap: 16px; }
-        select, input {
-            background: rgba(0, 0, 0, 0.4); color: #fff;
-            border: 1px solid var(--glass-border); padding: 10px 14px;
-            border-radius: 12px; font-size: 13px; outline: none; cursor: pointer;
-        }
-        select option { background-color: #0d1c37; color: #ffffff; }
-
-        .section-row { margin-bottom: 30px; }
-        .row-header {
-            font-size: 12px; font-weight: 700; text-transform: uppercase;
-            letter-spacing: 1.5px; color: #86868b; margin-bottom: 15px;
-        }
-        .liquid-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-        .liquid-card {
-            background: var(--glass-bg); backdrop-filter: blur(30px);
-            border: 1px solid var(--glass-border); padding: 25px 20px;
-            border-radius: 24px; text-align: center;
-        }
-        .val-label { font-size: 11px; color: #86868b; font-weight: 600; margin-bottom: 10px; }
-        .val-display { font-size: 28px; font-weight: 700; color: #fff; }
-
-        .status-positive { border-color: rgba(52, 199, 89, 0.4); background: rgba(52, 199, 89, 0.03); }
-        .status-positive .val-display { color: var(--accent-green); }
-        .status-negative { border-color: rgba(255, 149, 0, 0.4); background: rgba(255, 149, 0, 0.03); }
-        .status-negative .val-display { color: var(--accent-orange); }
-
         .table-container {
             background: var(--glass-bg); backdrop-filter: blur(30px);
             border: 1px solid var(--glass-border); border-radius: 24px;
             padding: 20px; overflow-x: auto; margin-bottom: 20px;
         }
-        table { width: 100%; border-collapse: collapse; font-size: 12px; text-align: left; }
+        table { width: 100%; border-collapse: collapse; font-size: 12px; text-align: left; white-space: nowrap; }
         th { 
             position: sticky; top: 0; background: rgba(10, 17, 26, 0.95);
-            color: var(--accent-blue); padding: 12px; font-weight: 700;
-            border-bottom: 1px solid var(--glass-border);
+            color: var(--accent-blue); padding: 14px 10px; font-weight: 700;
+            border-bottom: 1px solid var(--glass-border); text-align: right;
         }
-        td { padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,0.05); color: #ccc; }
-        td input { width: 90px; padding: 6px; font-size: 12px; text-align: right; }
+        th:first-child { text-align: left; }
+        td { padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); color: #ccc; text-align: right; }
+        td:first-child { text-align: left; font-weight: 600; color: #fff; }
+        td input { width: 85px; padding: 6px; font-size: 12px; text-align: right; background: rgba(0, 0, 0, 0.5); color: #fff; border: 1px solid var(--glass-border); border-radius: 8px; }
+        
+        .row-calculated { background: rgba(255, 255, 255, 0.02); font-weight: 600; color: #fff; }
+        .row-total { background: rgba(0, 122, 255, 0.08); font-weight: 700; color: #fff; border-top: 2px solid var(--accent-blue); }
 
-        .customer-mgmt { display: flex; gap: 10px; align-items: center; margin-bottom: 20px; }
-        .btn-cust {
-            background: rgba(52, 199, 89, 0.15); color: var(--accent-green); border: 1px solid rgba(52, 199, 89, 0.3);
-            padding: 8px 16px; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 11px;
-        }
-        .btn-cust-del {
-            background: rgba(255, 59, 48, 0.15); color: var(--accent-red); border: 1px solid rgba(255, 59, 48, 0.3);
-            padding: 8px 16px; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 11px;
-        }
         .btn-save {
             background: var(--accent-blue); color: #fff; border: none;
-            padding: 10px 24px; border-radius: 12px; font-weight: 700; cursor: pointer;
-            text-transform: uppercase; font-size: 12px; float: right; margin-top: 10px;
+            padding: 12px 30px; border-radius: 14px; font-weight: 700; cursor: pointer;
+            text-transform: uppercase; font-size: 13px; float: right; margin-top: 10px;
         }
+        .btn-save:hover { opacity: 0.8; }
     </style>
 </head>
 <body>
@@ -115,250 +78,139 @@
 <div class="container">
     <div class="view-switcher">
         <div class="segmented-control">
-            <button class="segment-btn active" onclick="switchView('dashboard')">Dashboard</button>
-            <button class="segment-btn" onclick="switchView('target')">Target (Budget)</button>
-            <button class="segment-btn" onclick="switchView('utfall')">Utfall (OMS)</button>
+            <button class="segment-btn active" onclick="switchView('target')">Target FY 27 (Huvudbudget)</button>
         </div>
     </div>
 
-    <div class="header"><h1>Utfall & Verklighet 2026</h1></div>
+    <div class="header"><h1>Target FY 27 — Budget & Summering</h1></div>
 
-    <div class="controls-glass">
-        <div style="font-size: 12px; font-weight: 600; color: var(--accent-green);">● LOKAL DATABAS AKTIV</div>
-        <div class="select-group">
-            <select id="cust-select" onchange="updateUI()"><option value="ALLA">Hela Portföljen</option></select>
-            <select id="month-select" onchange="updateUI()">
-                <option value="Sep">Sep</option><option value="Okt">Okt</option><option value="Nov">Nov</option>
-                <option value="Dec">Dec</option><option value="Jan" selected>Jan</option><option value="Feb">Feb</option>
-                <option value="Mar">Mar</option><option value="Apr">Apr</option><option value="Maj">Maj</option>
-                <option value="Jun">Jun</option><option value="Jul">Jul</option><option value="Aug">Aug</option>
-            </select>
-        </div>
+    <div class="table-container">
+        <table id="target-table">
+            <thead>
+                <tr>
+                    <th>Target FY 27</th>
+                    <th>Sep</th><th>Okt</th><th>Nov</th><th>Dec</th><th>Jan</th><th>Feb</th>
+                    <th>Mar</th><th>Apr</th><th>Maj</th><th>Jun</th><th>Jul</th><th>Aug</th>
+                    <th style="color: #fff;">Total year</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
     </div>
-
-    <!-- Dashboard Vy -->
-    <div id="dashboard-view">
-        <div class="section-row">
-            <div class="row-header">
-                <span>Månadsfokus — <span id="label-m" style="color: #fff;">PORTFÖLJEN | JAN</span></span>
-            </div>
-            <div class="liquid-grid">
-                <div class="liquid-card"><div class="val-label">Verkligt Utfall (OMS)</div><div class="val-display" id="m-inc">0 kr</div></div>
-                <div class="liquid-card"><div class="val-label">Target (Företag)</div><div class="val-display" id="m-tar">0 kr</div></div>
-                <div class="liquid-card" id="m-diff-c"><div class="val-label">Diff (Utfall - Target)</div><div class="val-display" id="m-diff">0 kr</div></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Target Vy -->
-    <div id="target-view" style="display: none;">
-        <div class="customer-mgmt">
-            <div style="font-size: 11px; font-weight: 700; color: #86868b; text-transform: uppercase;">Välj Verksamhet att redigera:</div>
-            <select id="target-cust-select" onchange="renderTargetTable()"></select>
-            <button class="btn-cust" onclick="addNewCustomer()">+ Ny Verksamhet</button>
-            <button class="btn-cust-del" onclick="deleteCustomer()">Ta bort Verksamhet</button>
-        </div>
-
-        <div class="table-container">
-            <table id="target-table">
-                <thead>
-                    <tr>
-                        <th>Konto / Post</th>
-                        <th>Sep</th><th>Okt</th><th>Nov</th><th>Dec</th><th>Jan</th><th>Feb</th>
-                        <th>Mar</th><th>Apr</th><th>Maj</th><th>Jun</th><th>Jul</th><th>Aug</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </div>
-        <button class="btn-save" onclick="saveTargetData()">Spara Target-ändringar</button>
-    </div>
-
-    <!-- Utfall Vy -->
-    <div id="utfall-view" style="display: none;">
-        <div class="table-container">
-            <table id="utfall-table">
-                <thead>
-                    <tr><th>Verksamhet</th><th>Månad</th><th>Utfall (OMS)</th><th>Target</th><th>Diff</th></tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </div>
-    </div>
+    <button class="btn-save" onclick="saveTarget()">Spara Ändringar</button>
 </div>
 
 <script>
     const months = ["Sep", "Okt", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr", "Maj", "Jun", "Jul", "Aug"];
-    const defaultTemplate = {
+    
+    // Standardvärden exakt från din bild
+    let targetData = JSON.parse(localStorage.getItem('master_target_fy27')) || {
         "Intäkter": [4854040, 3945205, 4660067, 3294763, 2841501, 3690804, 2707296, 3873455, 3315648, 1813615, 349638, 2051865],
         "Råvarukostnad": [-2233650, -1811996, -2144484, -1512655, -1306861, -1699330, -1240964, -1779850, -1526609, -828926, -154495, -941430],
         "Personalkostnader": [-1061611, -1061611, -1061611, -1071611, -893501, -893501, -893501, -891501, -901501, -891501, -35429, -891501],
         "Övriga kostnader": [-824160, -792030, -793560, -776730, -808860, -756330, -757860, -756330, -788460, -756330, -258570, -757860]
     };
 
-    let targetData = JSON.parse(localStorage.getItem('dashboard_target_data')) || {
-        "Adolf Fredriks": JSON.parse(JSON.stringify(defaultTemplate)),
-        "Hässelby": JSON.parse(JSON.stringify(defaultTemplate))
-    };
+    const fmt = new Intl.NumberFormat('sv-SE', { maximumFractionDigits: 0 });
+    const fmtPct = (val) => (val * 100).toFixed(1).replace('.', ',') + ' %';
 
-    let utfallData = JSON.parse(localStorage.getItem('dashboard_utfall_data')) || {
-        "Adolf Fredriks": { "Jan": 608367 },
-        "Hässelby": { "Jan": 499893 }
-    };
-
-    const fmt = new Intl.NumberFormat('sv-SE', { style: 'currency', currency: 'SEK', maximumFractionDigits: 0 });
-
-    function switchView(view) {
-        document.querySelectorAll('.segment-btn').forEach(btn => btn.classList.remove('active'));
-        ['dashboard-view', 'target-view', 'utfall-view'].forEach(id => document.getElementById(id).style.display = 'none');
-        
-        if(view === 'dashboard') {
-            document.querySelector('.segment-btn:nth-child(1)').classList.add('active');
-            document.getElementById('dashboard-view').style.display = 'block';
-            updateUI();
-        } else if(view === 'target') {
-            document.querySelector('.segment-btn:nth-child(2)').classList.add('active');
-            document.getElementById('target-view').style.display = 'block';
-            renderTargetTable();
-        } else {
-            document.querySelector('.segment-btn:nth-child(3)').classList.add('active');
-            document.getElementById('utfall-view').style.display = 'block';
-            renderUtfallTable();
-        }
-    }
-
-    function initDropdowns() {
-        const custS = document.getElementById('cust-select');
-        const targetCustS = document.getElementById('target-cust-select');
-        const currentVal = custS.value;
-        
-        custS.innerHTML = '<option value="ALLA">Hela Portföljen</option>';
-        targetCustS.innerHTML = '';
-
-        Object.keys(targetData).sort().forEach(k => {
-            const opt1 = document.createElement('option');
-            opt1.value = k; opt1.text = k;
-            if (k === currentVal) opt1.selected = true;
-            custS.appendChild(opt1);
-
-            const opt2 = document.createElement('option');
-            opt2.value = k; opt2.text = k;
-            targetCustS.appendChild(opt2);
-        });
-    }
-
-    function addNewCustomer() {
-        let name = prompt("Ange namn på den nya verksamheten:");
-        if (name && name.trim() !== "") {
-            name = name.trim();
-            if (!targetData[name]) {
-                targetData[name] = JSON.parse(JSON.stringify(defaultTemplate));
-                localStorage.setItem('dashboard_target_data', JSON.stringify(targetData));
-                initDropdowns();
-                document.getElementById('target-cust-select').value = name;
-                renderTargetTable();
-                alert("Verksamheten tillagd!");
-            } else {
-                alert("Verksamheten finns redan.");
-            }
-        }
-    }
-
-    function deleteCustomer() {
-        let cust = document.getElementById('target-cust-select').value;
-        if (confirm(`Är du säker på att du vill ta bort "${cust}"?`)) {
-            delete targetData[cust];
-            localStorage.setItem('dashboard_target_data', JSON.stringify(targetData));
-            initDropdowns();
-            renderTargetTable();
-            alert("Verksamheten borttagen.");
-        }
-    }
-
-    function renderTargetTable() {
-        const cust = document.getElementById('target-cust-select').value;
+    function renderTable() {
         const tbody = document.querySelector('#target-table tbody');
         tbody.innerHTML = '';
-        if (!cust || !targetData[cust]) return;
 
-        for (let row in targetData[cust]) {
-            let tr = document.createElement('tr');
-            let html = `<td style="font-weight:600; color:#fff;">${row}</td>`;
-            targetData[cust][row].forEach((val, idx) => {
-                html += `<td><input type="number" data-row="${row}" data-col="${idx}" value="${val}"></td>`;
-            });
-            tr.innerHTML = html;
-            tbody.appendChild(tr);
-        }
+        let intäkter = targetData["Intäkter"];
+        let råvaror = targetData["Råvarukostnad"];
+        let personal = targetData["Personalkostnader"];
+        let övrigt = targetData["Övriga kostnader"];
+
+        // 1. Intäkter
+        tbody.appendChild(createEditableRow("Intäkter", intäkter, false));
+
+        // 2. Råvarukostnad
+        tbody.appendChild(createEditableRow("Råvarukostnad", råvaror, false));
+
+        // 3. Råvarukostnad % (Råvaror / Intäkter)
+        let rawPct = intäkter.map((v, i) => v !== 0 ? råvaror[i] / v : 0);
+        let rawPctTot = intäkter.reduce((a, b) => a + b, 0) !== 0 ? råvaror.reduce((a, b) => a + b, 0) / intäkter.reduce((a, b) => a + b, 0) : 0;
+        tbody.appendChild(createCalculatedRow("Råvarukostnad %", rawPct, rawPctTot, true));
+
+        // 4. Personalkostnader
+        tbody.appendChild(createEditableRow("Personalkostnader", personal, false));
+
+        // 5. Personalkostnad %
+        let persPct = intäkter.map((v, i) => v !== 0 ? personal[i] / v : 0);
+        let persPctTot = intäkter.reduce((a, b) => a + b, 0) !== 0 ? personal.reduce((a, b) => a + b, 0) / intäkter.reduce((a, b) => a + b, 0) : 0;
+        tbody.appendChild(createCalculatedRow("Personalkostnad %", persPct, persPctTot, true));
+
+        // 6. Övriga kostnader
+        tbody.appendChild(createEditableRow("Övriga kostnader", övrigt, false));
+
+        // 7. Övriga kostnader %
+        let övrPct = intäkter.map((v, i) => v !== 0 ? övrigt[i] / v : 0);
+        let övrPctTot = intäkter.reduce((a, b) => a + b, 0) !== 0 ? övrigt.reduce((a, b) => a + b, 0) / intäkter.reduce((a, b) => a + b, 0) : 0;
+        tbody.appendChild(createCalculatedRow("Övriga kostnader %", övrPct, övrPctTot, true));
+
+        // 8. PI (Intäkter + Råvaror)
+        let pi = intäkter.map((v, i) => v + råvaror[i]);
+        tbody.appendChild(createCalculatedRow("PI", pi, pi.reduce((a, b) => a + b, 0), false));
+
+        // 9. PI % (PI / Intäkter)
+        let piPct = intäkter.map((v, i) => v !== 0 ? pi[i] / v : 0);
+        let piPctTot = intäkter.reduce((a, b) => a + b, 0) !== 0 ? pi.reduce((a, b) => a + b, 0) / intäkter.reduce((a, b) => a + b, 0) : 0;
+        tbody.appendChild(createCalculatedRow("PI%", piPct, piPctTot, true));
+
+        // 10. Gross Profit (PI + Personal + Övrigt)
+        let gp = intäkter.map((v, i) => pi[i] + personal[i] + övrigt[i]);
+        tbody.appendChild(createCalculatedRow("Gross Profit", gp, gp.reduce((a, b) => a + b, 0), false, true));
+
+        // 11. Gross Margin (Gross Profit / Intäkter)
+        let gpPct = intäkter.map((v, i) => v !== 0 ? gp[i] / v : 0);
+        let gpPctTot = intäkter.reduce((a, b) => a + b, 0) !== 0 ? gp.reduce((a, b) => a + b, 0) / intäkter.reduce((a, b) => a + b, 0) : 0;
+        tbody.appendChild(createCalculatedRow("Gross Margin", gpPct, gpPctTot, true, true));
     }
 
-    function saveTargetData() {
-        const cust = document.getElementById('target-cust-select').value;
+    function createEditableRow(label, arr, isPct) {
+        let tr = document.createElement('tr');
+        let html = `<td>${label}</td>`;
+        let total = arr.reduce((a, b) => a + b, 0);
+
+        arr.forEach((val, idx) => {
+            html += `<td><input type="number" data-row="${label}" data-col="${idx}" value="${val}" oninput="liveUpdate()"></td>`;
+        });
+        html += `<td style="font-weight: 700; color: #fff;">${fmt.format(total)}</td>`;
+        tr.innerHTML = html;
+        return tr;
+    }
+
+    function createCalculatedRow(label, arr, totalVal, isPct, isTotalRow) {
+        let tr = document.createElement('tr');
+        tr.className = isTotalRow ? 'row-total' : 'row-calculated';
+        let html = `<td>${label}</td>`;
+
+        arr.forEach(val => {
+            html += `<td>${isPct ? fmtPct(val) : fmt.format(val)}</td>`;
+        });
+        html += `<td>${isPct ? fmtPct(totalVal) : fmt.format(totalVal)}</td>`;
+        tr.innerHTML = html;
+        return tr;
+    }
+
+    function liveUpdate() {
         const inputs = document.querySelectorAll('#target-table input');
         inputs.forEach(input => {
             let row = input.getAttribute('data-row');
             let col = parseInt(input.getAttribute('data-col'));
-            targetData[cust][row][col] = parseFloat(input.value) || 0;
+            targetData[row][col] = parseFloat(input.value) || 0;
         });
-        localStorage.setItem('dashboard_target_data', JSON.stringify(targetData));
-        alert("Target sparad för " + cust + "!");
-        updateUI();
+        renderTable();
     }
 
-    function updateUI() {
-        const cust = document.getElementById('cust-select').value;
-        const mon = document.getElementById('month-select').value;
-        const monthIndex = months.indexOf(mon);
-        
-        document.getElementById('label-m').innerText = (cust === 'ALLA' ? 'PORTFÖLJEN' : cust.toUpperCase()) + " | " + mon.toUpperCase();
-
-        let totalTarget = 0;
-        let totalUtfall = 0;
-
-        let customers = (cust === 'ALLA') ? Object.keys(targetData) : [cust];
-
-        customers.forEach(c => {
-            if (targetData[c] && targetData[c]["Intäkter"]) {
-                totalTarget += targetData[c]["Intäkter"][monthIndex] || 0;
-            }
-            if (utfallData[c] && utfallData[c][mon]) {
-                totalUtfall += utfallData[c][mon];
-            }
-        });
-
-        const diff = totalUtfall - totalTarget;
-        document.getElementById('m-inc').innerText = fmt.format(totalUtfall);
-        document.getElementById('m-tar').innerText = fmt.format(totalTarget);
-        document.getElementById('m-diff').innerText = fmt.format(diff);
-        document.getElementById('m-diff-c').className = 'liquid-card ' + (diff >= 0 ? 'status-positive' : 'status-negative');
+    function saveTarget() {
+        localStorage.setItem('master_target_fy27', JSON.stringify(targetData));
+        alert("Target sparats framgångsrikt!");
     }
 
-    function renderUtfallTable() {
-        const tbody = document.querySelector('#utfall-table tbody');
-        tbody.innerHTML = '';
-        
-        for (let cust in utfallData) {
-            for (let mon in utfallData[cust]) {
-                let utf = utfallData[cust][mon];
-                let mIndex = months.indexOf(mon);
-                let tar = (targetData[cust] && targetData[cust]["Intäkter"]) ? targetData[cust]["Intäkter"][mIndex] : 0;
-                let diff = utf - tar;
-
-                let tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td style="font-weight:600; color:#fff;">${cust}</td>
-                    <td>${mon}</td>
-                    <td>${fmt.format(utf)}</td>
-                    <td>${fmt.format(tar)}</td>
-                    <td style="color:${diff >= 0 ? 'var(--accent-green)' : 'var(--accent-orange)'}">${fmt.format(diff)}</td>
-                `;
-                tbody.appendChild(tr);
-            }
-        }
-    }
-
-    initDropdowns();
-    updateUI();
+    renderTable();
 </script>
 </body>
 </html>
