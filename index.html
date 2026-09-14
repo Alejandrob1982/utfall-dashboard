@@ -22,7 +22,7 @@
             margin: 0; padding: 40px 20px; min-height: 100vh; overflow-x: hidden;
         }
 
-        .container { max-width: 1200px; margin: 0 auto; }
+        .container { max-width: 1300px; margin: 0 auto; }
 
         .view-switcher { display: flex; justify-content: center; margin-bottom: 30px; }
         .segmented-control {
@@ -30,8 +30,8 @@
             display: flex; gap: 4px; border: 1px solid var(--glass-border); backdrop-filter: blur(20px);
         }
         .segment-btn {
-            background: transparent; color: #86868b; border: none; padding: 8px 24px;
-            border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer;
+            background: transparent; color: #86868b; border: none; padding: 8px 20px;
+            border-radius: 10px; font-size: 12px; font-weight: 600; cursor: pointer;
             transition: all 0.3s; text-transform: uppercase; letter-spacing: 1px;
         }
         .segment-btn.active {
@@ -41,7 +41,7 @@
 
         .header { text-align: center; margin-bottom: 30px; }
         .header h1 { 
-            font-weight: 600; font-size: 28px;
+            font-weight: 600; font-size: 26px;
             background: linear-gradient(to bottom, #fff 0%, #a1a1a6 100%);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0;
         }
@@ -53,56 +53,27 @@
             align-items: center; margin-bottom: 30px; gap: 20px;
         }
 
-        .select-group { display: flex; gap: 16px; width: 100%; justify-content: flex-end; }
+        .select-group { display: flex; gap: 16px; }
         select, input {
             background: rgba(0, 0, 0, 0.4); color: #fff;
-            border: 1px solid var(--glass-border); padding: 12px 16px;
-            border-radius: 14px; font-size: 14px; outline: none; cursor: pointer;
+            border: 1px solid var(--glass-border); padding: 10px 14px;
+            border-radius: 12px; font-size: 13px; outline: none; cursor: pointer;
         }
         select option { background-color: #0d1c37; color: #ffffff; }
 
-        .form-container {
-            background: var(--glass-bg); backdrop-filter: blur(30px);
-            border: 1px solid var(--glass-border); border-radius: 24px;
-            padding: 25px; margin-bottom: 30px; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr auto; gap: 15px; align-items: end;
-        }
-        .form-group { display: flex; flex-direction: column; gap: 6px; }
-        .form-group label { font-size: 11px; font-weight: 700; color: #86868b; text-transform: uppercase; }
-
-        .btn-add {
-            background: var(--accent-blue); color: #fff; border: none;
-            padding: 12px 20px; border-radius: 14px; font-weight: 700; cursor: pointer;
-            text-transform: uppercase; font-size: 13px; transition: opacity 0.3s;
-        }
-        .btn-add:hover { opacity: 0.8; }
-
-        .customer-mgmt {
-            background: var(--glass-bg); backdrop-filter: blur(30px);
-            border: 1px solid var(--glass-border); border-radius: 24px;
-            padding: 20px 25px; margin-bottom: 30px; display: flex; gap: 15px; align-items: center;
-        }
-        .btn-cust {
-            background: rgba(52, 199, 89, 0.15); color: var(--accent-green); border: 1px solid rgba(52, 199, 89, 0.3);
-            padding: 10px 18px; border-radius: 12px; font-weight: 700; cursor: pointer; font-size: 12px;
-        }
-        .btn-cust-del {
-            background: rgba(255, 59, 48, 0.15); color: var(--accent-red); border: 1px solid rgba(255, 59, 48, 0.3);
-            padding: 10px 18px; border-radius: 12px; font-weight: 700; cursor: pointer; font-size: 12px;
-        }
-
-        .section-row { margin-bottom: 40px; }
+        .section-row { margin-bottom: 30px; }
         .row-header {
             font-size: 12px; font-weight: 700; text-transform: uppercase;
-            letter-spacing: 1.5px; color: #86868b; margin-bottom: 20px;
+            letter-spacing: 1.5px; color: #86868b; margin-bottom: 15px;
         }
-        .liquid-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+        .liquid-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
         .liquid-card {
             background: var(--glass-bg); backdrop-filter: blur(30px);
-            border: 1px solid var(--glass-border); padding: 35px 20px;
-            border-radius: 28px; text-align: center;
+            border: 1px solid var(--glass-border); padding: 25px 20px;
+            border-radius: 24px; text-align: center;
         }
-        .val-label { font-size: 11px; color: #86868b; font-weight: 600; margin-bottom: 15px; }
-        .val-display { font-size: 34px; font-weight: 700; color: #fff; }
+        .val-label { font-size: 11px; color: #86868b; font-weight: 600; margin-bottom: 10px; }
+        .val-display { font-size: 28px; font-weight: 700; color: #fff; }
 
         .status-positive { border-color: rgba(52, 199, 89, 0.4); background: rgba(52, 199, 89, 0.03); }
         .status-positive .val-display { color: var(--accent-green); }
@@ -112,16 +83,31 @@
         .table-container {
             background: var(--glass-bg); backdrop-filter: blur(30px);
             border: 1px solid var(--glass-border); border-radius: 24px;
-            padding: 20px; overflow-x: auto; max-height: 600px;
+            padding: 20px; overflow-x: auto; margin-bottom: 20px;
         }
-        table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; }
+        table { width: 100%; border-collapse: collapse; font-size: 12px; text-align: left; }
         th { 
             position: sticky; top: 0; background: rgba(10, 17, 26, 0.95);
-            color: var(--accent-blue); padding: 15px; font-weight: 700;
+            color: var(--accent-blue); padding: 12px; font-weight: 700;
             border-bottom: 1px solid var(--glass-border);
         }
-        td { padding: 12px 15px; border-bottom: 1px solid rgba(255,255,255,0.05); color: #ccc; }
-        .btn-del { background: rgba(255,59,48,0.2); color: var(--accent-red); border: none; padding: 6px 12px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        td { padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,0.05); color: #ccc; }
+        td input { width: 90px; padding: 6px; font-size: 12px; text-align: right; }
+
+        .customer-mgmt { display: flex; gap: 10px; align-items: center; margin-bottom: 20px; }
+        .btn-cust {
+            background: rgba(52, 199, 89, 0.15); color: var(--accent-green); border: 1px solid rgba(52, 199, 89, 0.3);
+            padding: 8px 16px; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 11px;
+        }
+        .btn-cust-del {
+            background: rgba(255, 59, 48, 0.15); color: var(--accent-red); border: 1px solid rgba(255, 59, 48, 0.3);
+            padding: 8px 16px; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 11px;
+        }
+        .btn-save {
+            background: var(--accent-blue); color: #fff; border: none;
+            padding: 10px 24px; border-radius: 12px; font-weight: 700; cursor: pointer;
+            text-transform: uppercase; font-size: 12px; float: right; margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -130,17 +116,18 @@
     <div class="view-switcher">
         <div class="segmented-control">
             <button class="segment-btn active" onclick="switchView('dashboard')">Dashboard</button>
-            <button class="segment-btn" onclick="switchView('data')">Affärsdata & Inmatning</button>
+            <button class="segment-btn" onclick="switchView('target')">Target (Budget)</button>
+            <button class="segment-btn" onclick="switchView('utfall')">Utfall (OMS)</button>
         </div>
     </div>
 
     <div class="header"><h1>Utfall & Verklighet 2026</h1></div>
 
     <div class="controls-glass">
-        <div style="font-size: 13px; font-weight: 600; color: var(--accent-green);">● INTERN DATABAS AKTIV</div>
+        <div style="font-size: 12px; font-weight: 600; color: var(--accent-green);">● LOKAL DATABAS AKTIV</div>
         <div class="select-group">
-            <select id="cust-select"><option value="ALLA">Hela Portföljen</option></select>
-            <select id="month-select">
+            <select id="cust-select" onchange="updateUI()"><option value="ALLA">Hela Portföljen</option></select>
+            <select id="month-select" onchange="updateUI()">
                 <option value="Sep">Sep</option><option value="Okt">Okt</option><option value="Nov">Nov</option>
                 <option value="Dec">Dec</option><option value="Jan" selected>Jan</option><option value="Feb">Feb</option>
                 <option value="Mar">Mar</option><option value="Apr">Apr</option><option value="Maj">Maj</option>
@@ -163,159 +150,92 @@
         </div>
     </div>
 
-    <!-- Data & Inmatningsvy -->
-    <div id="data-view" style="display: none;">
-        <!-- Kundhantering -->
+    <!-- Target Vy -->
+    <div id="target-view" style="display: none;">
         <div class="customer-mgmt">
-            <div style="font-size: 12px; font-weight: 700; color: #86868b; text-transform: uppercase;">Kundregister:</div>
-            <button class="btn-cust" onclick="addNewCustomerModal()">+ Lägg till ny kund</button>
-            <button class="btn-cust-del" onclick="deleteCustomerModal()">Ta bort befintlig kund</button>
-        </div>
-
-        <div class="form-container">
-            <div class="form-group">
-                <label>Välj Kund / Verksamhet</label>
-                <select id="inp-cust"></select>
-            </div>
-            <div class="form-group">
-                <label>Månad</label>
-                <select id="inp-mon">
-                    <option value="Sep">Sep</option><option value="Okt">Okt</option><option value="Nov">Nov</option>
-                    <option value="Dec">Dec</option><option value="Jan" selected>Jan</option><option value="Feb">Feb</option>
-                    <option value="Mar">Mar</option><option value="Apr">Apr</option><option value="Maj">Maj</option>
-                    <option value="Jun">Jun</option><option value="Jul">Jul</option><option value="Aug">Aug</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Utfall (OMS)</label>
-                <input type="number" id="inp-utf" placeholder="0">
-            </div>
-            <div class="form-group">
-                <label>Target (Mål)</label>
-                <input type="number" id="inp-tar" placeholder="0">
-            </div>
-            <button class="btn-add" onclick="addEntry()">Spara Post</button>
+            <div style="font-size: 11px; font-weight: 700; color: #86868b; text-transform: uppercase;">Välj Verksamhet att redigera:</div>
+            <select id="target-cust-select" onchange="renderTargetTable()"></select>
+            <button class="btn-cust" onclick="addNewCustomer()">+ Ny Verksamhet</button>
+            <button class="btn-cust-del" onclick="deleteCustomer()">Ta bort Verksamhet</button>
         </div>
 
         <div class="table-container">
-            <table id="data-table">
+            <table id="target-table">
                 <thead>
-                    <tr><th>Kund / Verksamhet</th><th>Månad</th><th>Utfall (OMS)</th><th>Target</th><th>Diff</th><th>Åtgärd</th></tr>
+                    <tr>
+                        <th>Konto / Post</th>
+                        <th>Sep</th><th>Okt</th><th>Nov</th><th>Dec</th><th>Jan</th><th>Feb</th>
+                        <th>Mar</th><th>Apr</th><th>Maj</th><th>Jun</th><th>Jul</th><th>Aug</th>
+                    </tr>
                 </thead>
-                <tbody>
-                    <tr><td colspan="6" style="text-align: center; padding: 40px;">Inga poster inlagda ännu.</td></tr>
-                </tbody>
+                <tbody></tbody>
+            </table>
+        </div>
+        <button class="btn-save" onclick="saveTargetData()">Spara Target-ändringar</button>
+    </div>
+
+    <!-- Utfall Vy -->
+    <div id="utfall-view" style="display: none;">
+        <div class="table-container">
+            <table id="utfall-table">
+                <thead>
+                    <tr><th>Verksamhet</th><th>Månad</th><th>Utfall (OMS)</th><th>Target</th><th>Diff</th></tr>
+                </thead>
+                <tbody></tbody>
             </table>
         </div>
     </div>
 </div>
 
 <script>
-    let customersList = JSON.parse(localStorage.getItem('internal_dashboard_cust')) || ["Adolf Fredriks", "Hässelby"];
-    let dbData = JSON.parse(localStorage.getItem('internal_dashboard_db')) || [];
+    const months = ["Sep", "Okt", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr", "Maj", "Jun", "Jul", "Aug"];
+    const defaultTemplate = {
+        "Intäkter": [4854040, 3945205, 4660067, 3294763, 2841501, 3690804, 2707296, 3873455, 3315648, 1813615, 349638, 2051865],
+        "Råvarukostnad": [-2233650, -1811996, -2144484, -1512655, -1306861, -1699330, -1240964, -1779850, -1526609, -828926, -154495, -941430],
+        "Personalkostnader": [-1061611, -1061611, -1061611, -1071611, -893501, -893501, -893501, -891501, -901501, -891501, -35429, -891501],
+        "Övriga kostnader": [-824160, -792030, -793560, -776730, -808860, -756330, -757860, -756330, -788460, -756330, -258570, -757860]
+    };
+
+    let targetData = JSON.parse(localStorage.getItem('dashboard_target_data')) || {
+        "Adolf Fredriks": JSON.parse(JSON.stringify(defaultTemplate)),
+        "Hässelby": JSON.parse(JSON.stringify(defaultTemplate))
+    };
+
+    let utfallData = JSON.parse(localStorage.getItem('dashboard_utfall_data')) || {
+        "Adolf Fredriks": { "Jan": 608367 },
+        "Hässelby": { "Jan": 499893 }
+    };
 
     const fmt = new Intl.NumberFormat('sv-SE', { style: 'currency', currency: 'SEK', maximumFractionDigits: 0 });
 
     function switchView(view) {
         document.querySelectorAll('.segment-btn').forEach(btn => btn.classList.remove('active'));
+        ['dashboard-view', 'target-view', 'utfall-view'].forEach(id => document.getElementById(id).style.display = 'none');
+        
         if(view === 'dashboard') {
             document.querySelector('.segment-btn:nth-child(1)').classList.add('active');
             document.getElementById('dashboard-view').style.display = 'block';
-            document.getElementById('data-view').style.display = 'none';
-        } else {
+            updateUI();
+        } else if(view === 'target') {
             document.querySelector('.segment-btn:nth-child(2)').classList.add('active');
-            document.getElementById('dashboard-view').style.display = 'none';
-            document.getElementById('data-view').style.display = 'block';
-        }
-    }
-
-    function saveData() {
-        localStorage.setItem('internal_dashboard_db', JSON.stringify(dbData));
-        localStorage.setItem('internal_dashboard_cust', JSON.stringify(customersList));
-    }
-
-    function addNewCustomerModal() {
-        let name = prompt("Ange namn på den nya kunden/verksamheten:");
-        if (name && name.trim() !== "") {
-            name = name.trim();
-            if (!customersList.includes(name)) {
-                customersList.push(name);
-                customersList.sort();
-                saveData();
-                initDropdowns();
-                alert("Kunden har lagts till!");
-            } else {
-                alert("Kunden finns redan i registret.");
-            }
-        }
-    }
-
-    function deleteCustomerModal() {
-        let name = prompt("Vilken kund vill du ta bort? (Exakt namn):\n\nTillgängliga kunder:\n" + customersList.join(", "));
-        if (name && name.trim() !== "") {
-            name = name.trim();
-            if (customersList.includes(name)) {
-                if (confirm(`Är du säker på att du vill ta bort "${name}" och alla dess sparade poster?`)) {
-                    customersList = customersList.filter(c => c !== name);
-                    dbData = dbData.filter(item => item.cust !== name);
-                    saveData();
-                    initDropdowns();
-                    updateUI();
-                    buildTable();
-                    alert("Kunden har tagits bort.");
-                }
-            } else {
-                alert("Hittade inte kunden i registret.");
-            }
-        }
-    }
-
-    function addEntry() {
-        const cust = document.getElementById('inp-cust').value;
-        const mon = document.getElementById('inp-mon').value;
-        const utfall = parseFloat(document.getElementById('inp-utf').value) || 0;
-        const target = parseFloat(document.getElementById('inp-tar').value) || 0;
-
-        if (!cust) {
-            alert("Välj en kund först!");
-            return;
-        }
-
-        let existing = dbData.find(item => item.cust === cust && item.mon === mon);
-        if (existing) {
-            existing.utfall = utfall;
-            existing.target = target;
+            document.getElementById('target-view').style.display = 'block';
+            renderTargetTable();
         } else {
-            dbData.push({ cust, mon, utfall, target });
+            document.querySelector('.segment-btn:nth-child(3)').classList.add('active');
+            document.getElementById('utfall-view').style.display = 'block';
+            renderUtfallTable();
         }
-
-        saveData();
-        updateUI();
-        buildTable();
-
-        document.getElementById('inp-utf').value = '';
-        document.getElementById('inp-tar').value = '';
-        alert("Posten sparad!");
-    }
-
-    function deleteEntry(index) {
-        dbData.splice(index, 1);
-        saveData();
-        updateUI();
-        buildTable();
     }
 
     function initDropdowns() {
-        // Filter-rullgardin
         const custS = document.getElementById('cust-select');
+        const targetCustS = document.getElementById('target-cust-select');
         const currentVal = custS.value;
-        custS.innerHTML = '<option value="ALLA">Hela Portföljen</option>';
         
-        // Inmatnings-rullgardin
-        const inpS = document.getElementById('inp-cust');
-        inpS.innerHTML = '';
+        custS.innerHTML = '<option value="ALLA">Hela Portföljen</option>';
+        targetCustS.innerHTML = '';
 
-        customersList.forEach(k => {
+        Object.keys(targetData).sort().forEach(k => {
             const opt1 = document.createElement('option');
             opt1.value = k; opt1.text = k;
             if (k === currentVal) opt1.selected = true;
@@ -323,26 +243,86 @@
 
             const opt2 = document.createElement('option');
             opt2.value = k; opt2.text = k;
-            inpS.appendChild(opt2);
+            targetCustS.appendChild(opt2);
         });
+    }
+
+    function addNewCustomer() {
+        let name = prompt("Ange namn på den nya verksamheten:");
+        if (name && name.trim() !== "") {
+            name = name.trim();
+            if (!targetData[name]) {
+                targetData[name] = JSON.parse(JSON.stringify(defaultTemplate));
+                localStorage.setItem('dashboard_target_data', JSON.stringify(targetData));
+                initDropdowns();
+                document.getElementById('target-cust-select').value = name;
+                renderTargetTable();
+                alert("Verksamheten tillagd!");
+            } else {
+                alert("Verksamheten finns redan.");
+            }
+        }
+    }
+
+    function deleteCustomer() {
+        let cust = document.getElementById('target-cust-select').value;
+        if (confirm(`Är du säker på att du vill ta bort "${cust}"?`)) {
+            delete targetData[cust];
+            localStorage.setItem('dashboard_target_data', JSON.stringify(targetData));
+            initDropdowns();
+            renderTargetTable();
+            alert("Verksamheten borttagen.");
+        }
+    }
+
+    function renderTargetTable() {
+        const cust = document.getElementById('target-cust-select').value;
+        const tbody = document.querySelector('#target-table tbody');
+        tbody.innerHTML = '';
+        if (!cust || !targetData[cust]) return;
+
+        for (let row in targetData[cust]) {
+            let tr = document.createElement('tr');
+            let html = `<td style="font-weight:600; color:#fff;">${row}</td>`;
+            targetData[cust][row].forEach((val, idx) => {
+                html += `<td><input type="number" data-row="${row}" data-col="${idx}" value="${val}"></td>`;
+            });
+            tr.innerHTML = html;
+            tbody.appendChild(tr);
+        }
+    }
+
+    function saveTargetData() {
+        const cust = document.getElementById('target-cust-select').value;
+        const inputs = document.querySelectorAll('#target-table input');
+        inputs.forEach(input => {
+            let row = input.getAttribute('data-row');
+            let col = parseInt(input.getAttribute('data-col'));
+            targetData[cust][row][col] = parseFloat(input.value) || 0;
+        });
+        localStorage.setItem('dashboard_target_data', JSON.stringify(targetData));
+        alert("Target sparad för " + cust + "!");
+        updateUI();
     }
 
     function updateUI() {
         const cust = document.getElementById('cust-select').value;
         const mon = document.getElementById('month-select').value;
+        const monthIndex = months.indexOf(mon);
         
         document.getElementById('label-m').innerText = (cust === 'ALLA' ? 'PORTFÖLJEN' : cust.toUpperCase()) + " | " + mon.toUpperCase();
 
-        let totalUtfall = 0;
         let totalTarget = 0;
+        let totalUtfall = 0;
 
-        dbData.forEach(item => {
-            let matchCust = (cust === 'ALLA') || (item.cust === cust);
-            let matchMon = (item.mon === mon);
+        let customers = (cust === 'ALLA') ? Object.keys(targetData) : [cust];
 
-            if (matchCust && matchMon) {
-                totalUtfall += item.utfall;
-                totalTarget += item.target;
+        customers.forEach(c => {
+            if (targetData[c] && targetData[c]["Intäkter"]) {
+                totalTarget += targetData[c]["Intäkter"][monthIndex] || 0;
+            }
+            if (utfallData[c] && utfallData[c][mon]) {
+                totalUtfall += utfallData[c][mon];
             }
         });
 
@@ -353,37 +333,32 @@
         document.getElementById('m-diff-c').className = 'liquid-card ' + (diff >= 0 ? 'status-positive' : 'status-negative');
     }
 
-    function buildTable() {
-        const tbody = document.querySelector('#data-table tbody');
+    function renderUtfallTable() {
+        const tbody = document.querySelector('#utfall-table tbody');
         tbody.innerHTML = '';
         
-        if (dbData.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 40px;">Inga poster inlagda ännu.</td></tr>';
-            return;
-        }
+        for (let cust in utfallData) {
+            for (let mon in utfallData[cust]) {
+                let utf = utfallData[cust][mon];
+                let mIndex = months.indexOf(mon);
+                let tar = (targetData[cust] && targetData[cust]["Intäkter"]) ? targetData[cust]["Intäkter"][mIndex] : 0;
+                let diff = utf - tar;
 
-        dbData.forEach((item, index) => {
-            let diff = item.utfall - item.target;
-            let tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td style="font-weight: 600; color: #fff;">${item.cust}</td>
-                <td>${item.mon}</td>
-                <td>${fmt.format(item.utfall)}</td>
-                <td>${fmt.format(item.target)}</td>
-                <td style="color: ${diff >= 0 ? 'var(--accent-green)' : 'var(--accent-orange)'}">${fmt.format(diff)}</td>
-                <td><button class="btn-del" onclick="deleteEntry(${index})">Ta bort</button></td>
-            `;
-            tbody.appendChild(tr);
-        });
+                let tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style="font-weight:600; color:#fff;">${cust}</td>
+                    <td>${mon}</td>
+                    <td>${fmt.format(utf)}</td>
+                    <td>${fmt.format(tar)}</td>
+                    <td style="color:${diff >= 0 ? 'var(--accent-green)' : 'var(--accent-orange)'}">${fmt.format(diff)}</td>
+                `;
+                tbody.appendChild(tr);
+            }
+        }
     }
 
-    document.getElementById('cust-select').addEventListener('change', updateUI);
-    document.getElementById('month-select').addEventListener('change', updateUI);
-
-    // Initialisera vid start
     initDropdowns();
     updateUI();
-    buildTable();
 </script>
 </body>
 </html>
