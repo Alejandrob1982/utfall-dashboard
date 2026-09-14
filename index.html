@@ -2,107 +2,312 @@
 <html lang="sv">
 <head>
     <meta charset="UTF-8">
-    <title>Sodexo Enterprise Portal</title>
+    <title>Utfall & Verklighet v12.3</title>
+    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
     <style>
         :root {
-            --bg-deep: #000205;
             --glass-bg: rgba(255, 255, 255, 0.03);
             --glass-border: rgba(255, 255, 255, 0.1);
             --accent-blue: #007aff;
             --accent-green: #34c759;
+            --accent-orange: #ff9500;
+            --bg-deep: #000205;
         }
+
         body {
             background-color: var(--bg-deep);
+            background-image: radial-gradient(circle at 50% -20%, #1a2a44 0%, var(--bg-deep) 70%);
             color: #f5f5f7;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            margin: 0; padding: 0;
-            display: flex; height: 100vh; overflow: hidden;
+            margin: 0; padding: 40px 20px; min-height: 100vh; overflow-x: hidden;
         }
-        /* Sidebar Navigation */
-        .sidebar {
-            width: 260px; background: rgba(10, 17, 26, 0.8);
-            border-right: 1px solid var(--glass-border);
-            display: flex; flex-direction: column; padding: 20px;
+
+        .container { max-width: 1200px; margin: 0 auto; }
+
+        .view-switcher { display: flex; justify-content: center; margin-bottom: 40px; }
+        .segmented-control {
+            background: rgba(255, 255, 255, 0.05); padding: 4px; border-radius: 14px;
+            display: flex; gap: 4px; border: 1px solid var(--glass-border); backdrop-filter: blur(20px);
         }
-        .sidebar h2 { font-size: 16px; color: #fff; margin-bottom: 30px; letter-spacing: 1px; }
-        .nav-item {
-            padding: 12px 16px; color: #86868b; text-decoration: none;
-            border-radius: 10px; margin-bottom: 8px; font-weight: 600; font-size: 13px;
-            cursor: pointer; transition: all 0.3s;
+        .segment-btn {
+            background: transparent; color: #86868b; border: none; padding: 8px 24px;
+            border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer;
+            transition: all 0.3s; text-transform: uppercase; letter-spacing: 1px;
         }
-        .nav-item:hover, .nav-item.active { background: rgba(0, 122, 255, 0.15); color: var(--accent-blue); }
-        
-        /* Main Content Area */
-        .main-content { flex: 1; padding: 40px; overflow-y: auto; background: radial-gradient(circle at 50% -20%, #1a2a44 0%, var(--bg-deep) 70%); }
-        .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
-        .module-card {
-            background: var(--glass-bg); border: 1px solid var(--glass-border);
-            border-radius: 24px; padding: 30px; text-align: center; cursor: pointer;
-            backdrop-filter: blur(20px); transition: all 0.4s;
+        .segment-btn.active {
+            background: rgba(255, 255, 255, 0.1); color: #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
         }
-        .module-card:hover { border-color: var(--accent-blue); transform: translateY(-4px); box-shadow: 0 10px 30px rgba(0,122,255,0.2); }
-        .module-card h3 { color: #fff; margin-top: 15px; font-size: 18px; }
-        .module-card p { color: #86868b; font-size: 13px; margin-top: 8px; }
+
+        .header { text-align: center; margin-bottom: 30px; }
+        .header h1 { 
+            font-weight: 600; font-size: 28px;
+            background: linear-gradient(to bottom, #fff 0%, #a1a1a6 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0;
+        }
+
+        .controls-glass {
+            background: var(--glass-bg); backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border); padding: 20px 24px;
+            border-radius: 24px; display: grid; grid-template-columns: 1fr 2fr;
+            gap: 30px; align-items: center; margin-bottom: 40px;
+        }
+
+        .upload-btn {
+            background: rgba(0, 122, 255, 0.15); color: var(--accent-blue);
+            padding: 12px 28px; border-radius: 14px; font-weight: 700; font-size: 13px;
+            cursor: pointer; transition: all 0.4s; border: 1px solid rgba(0, 122, 255, 0.3);
+            display: inline-block; text-transform: uppercase; letter-spacing: 1px;
+        }
+        .upload-btn:hover { background: var(--accent-blue); color: #fff; }
+        input[type="file"] { display: none; }
+
+        .select-group { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        select {
+            background: rgba(0, 0, 0, 0.4); color: #fff;
+            border: 1px solid var(--glass-border); padding: 12px 16px;
+            border-radius: 14px; font-size: 14px; outline: none; cursor: pointer;
+        }
+        select option { background-color: #0d1c37; color: #ffffff; }
+
+        #dashboard-view { display: block; }
+        #data-view { display: none; }
+
+        .section-row { margin-bottom: 40px; }
+        .row-header {
+            font-size: 12px; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 1.5px; color: #86868b; margin-bottom: 20px;
+            display: flex; justify-content: space-between;
+        }
+        .liquid-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+        .liquid-card {
+            background: var(--glass-bg); backdrop-filter: blur(30px);
+            border: 1px solid var(--glass-border); padding: 35px 20px;
+            border-radius: 28px; text-align: center;
+        }
+        .val-label { font-size: 11px; color: #86868b; font-weight: 600; margin-bottom: 15px; }
+        .val-display { font-size: 34px; font-weight: 700; color: #fff; }
+
+        .status-positive { border-color: rgba(52, 199, 89, 0.4); background: rgba(52, 199, 89, 0.03); }
+        .status-positive .val-display { color: var(--accent-green); }
+        .status-negative { border-color: rgba(255, 149, 0, 0.4); background: rgba(255, 149, 0, 0.03); }
+        .status-negative .val-display { color: var(--accent-orange); }
+
+        .table-container {
+            background: var(--glass-bg); backdrop-filter: blur(30px);
+            border: 1px solid var(--glass-border); border-radius: 24px;
+            padding: 20px; overflow-x: auto; max-height: 600px;
+        }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; }
+        th { 
+            position: sticky; top: 0; background: rgba(10, 17, 26, 0.95);
+            color: var(--accent-blue); padding: 15px; font-weight: 700;
+            border-bottom: 1px solid var(--glass-border);
+        }
+        td { padding: 12px 15px; border-bottom: 1px solid rgba(255,255,255,0.05); color: #ccc; }
     </style>
 </head>
 <body>
 
-    <!-- Säkrad Sidomeny -->
-    <div class="sidebar">
-        <h2>SODEXO PORTAL</h2>
-        <div class="nav-item active" onclick="switchModule('reg')">Registrering & Svinn</div>
-        <div class="nav-item" onclick="switchModule('budget')">Budget & Utfall (v12.2)</div>
-        <div class="nav-item" onclick="logout()" style="margin-top: auto; color: #ff9500;">Logga ut</div>
+<div class="container">
+    <div class="view-switcher">
+        <div class="segmented-control">
+            <button class="segment-btn active" onclick="switchView('dashboard')">Dashboard</button>
+            <button class="segment-btn" onclick="switchView('data')">Affärsdata</button>
+        </div>
     </div>
 
-    <!-- Huvudyta -->
-    <div class="main-content">
-        <!-- Modul 1: Esmiley-inspirerad registreringsvy -->
-        <div id="module-reg">
-            <h1 style="font-size: 24px; margin-bottom: 30px; font-weight: 600;">Registreringspunkter</h1>
-            <div class="card-grid">
-                <div class="module-card" onclick="alert('Öppnar Gästregistrering')">
-                    <div style="font-size: 40px;">👤</div>
-                    <h3>Gästregistrering</h3>
-                    <p>Lägg till nya gäster och besökssiffror</p>
-                </div>
-                <div class="module-card" onclick="alert('Öppnar Matsvinn')">
-                    <div style="font-size: 40px;">🍎</div>
-                    <h3>Matsvinn</h3>
-                    <p>Registrera förvaringssvinn och tallrikssvinn</p>
-                </div>
-                <div class="module-card" onclick="alert('Öppnar Produktion')">
-                    <div style="font-size: 40px;">🍳</div>
-                    <h3>Produktion</h3>
-                    <p>Följ upp tillagad volym och menyer</p>
-                </div>
+    <div class="header"><h1>Utfall & Verklighet 2026</h1></div>
+
+    <div class="controls-glass">
+        <div>
+            <label for="excel-upload" class="upload-btn">Välj Bok1.xlsx</label>
+            <input type="file" id="excel-upload" accept=".xlsx, .xlsm">
+            <span id="sync-status" style="font-size:10px; color:var(--accent-green); margin-left:10px; font-weight:bold;"></span>
+        </div>
+        <div class="select-group">
+            <select id="cust-select"><option value="ALLA">Hela Portföljen</option></select>
+            <select id="month-select">
+                <option value="Sep" selected>September</option>
+                <option value="Okt">Oktober</option>
+                <option value="Nov">November</option>
+                <option value="Dec">December</option>
+                <option value="Jan">Januari</option>
+                <option value="Feb">Februari</option>
+                <option value="Mar">Mars</option>
+                <option value="Apr">April</option>
+                <option value="Maj">Maj</option>
+                <option value="Jun">Juni</option>
+                <option value="Jul">Juli</option>
+                <option value="Aug">Augusti</option>
+            </select>
+        </div>
+    </div>
+
+    <div id="dashboard-view">
+        <div class="section-row">
+            <div class="row-header">
+                <span>Månadsfokus — <span id="label-m" style="color: #fff;">VÄNTAR PÅ DATA</span></span>
+            </div>
+            <div class="liquid-grid">
+                <div class="liquid-card"><div class="val-label">Verkligt Utfall (OMS)</div><div class="val-display" id="m-inc">0 kr</div></div>
+                <div class="liquid-card"><div class="val-label">Target (Företag)</div><div class="val-display" id="m-tar">0 kr</div></div>
+                <div class="liquid-card" id="m-diff-c"><div class="val-label">Diff (Utfall - Target)</div><div class="val-display" id="m-diff">0 kr</div></div>
             </div>
         </div>
-
-        <!-- Modul 2: Din befintliga budget-dashboard (Inbäddad dolda vy) -->
-        <div id="module-budget" style="display: none;">
-            <h1 style="font-size: 24px; margin-bottom: 30px; font-weight: 600;">Budget & Utfall (Affärsdata)</h1>
-            <p style="color: #86868b;">Här laddas din existerande v12.2-struktur in med full funktionalitet.</p>
-        </div>
     </div>
 
-    <script>
-        function switchModule(mod) {
-            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-            if(mod === 'reg') {
-                document.getElementById('module-reg').style.display = 'block';
-                document.getElementById('module-budget').style.display = 'none';
-                event.target.classList.add('active');
-            } else {
-                document.getElementById('module-reg').style.display = 'none';
-                document.getElementById('module-budget').style.display = 'block';
-                event.target.classList.add('active');
+    <div id="data-view">
+        <div class="table-container">
+            <table id="data-table">
+                <thead>
+                    <tr><th>Kund / Verksamhet</th><th>Månad</th><th>Utfall (OMS)</th><th>Target</th><th>Diff</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td colspan="5" style="text-align: center; padding: 40px;">Ingen data inläst ännu. Ladda upp din Excel-fil.</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    let rawData = [];
+    const fmt = new Intl.NumberFormat('sv-SE', { style: 'currency', currency: 'SEK', maximumFractionDigits: 0 });
+
+    function switchView(view) {
+        document.querySelectorAll('.segment-btn').forEach(btn => btn.classList.remove('active'));
+        if(view === 'dashboard') {
+            document.querySelector('.segment-btn:nth-child(1)').classList.add('active');
+            document.getElementById('dashboard-view').style.display = 'block';
+            document.getElementById('data-view').style.display = 'none';
+        } else {
+            document.querySelector('.segment-btn:nth-child(2)').classList.add('active');
+            document.getElementById('dashboard-view').style.display = 'none';
+            document.getElementById('data-view').style.display = 'block';
+        }
+    }
+
+    function parseV(val) {
+        let n = parseFloat(val?.toString().replace(/\s/g, '').replace('kr', '').replace(',', '.'));
+        return isNaN(n) ? 0 : n;
+    }
+
+    document.getElementById('excel-upload').addEventListener('change', function(e) {
+        const reader = new FileReader();
+        reader.onload = (evt) => {
+            const workbook = XLSX.read(new Uint8Array(evt.target.result), {type: 'array'});
+            
+            // Försök läsa blad 2 eller det som innehåller kunddata baserat på din nya filstruktur
+            const sheetName = workbook.SheetNames.length > 1 ? workbook.SheetNames[1] : workbook.SheetNames[0];
+            const sheet = workbook.Sheets[sheetName];
+            rawData = XLSX.utils.sheet_to_json(sheet);
+            
+            localStorage.setItem('sodexo_dashboard_data', JSON.stringify(rawData));
+            document.getElementById('sync-status').innerText = "● LIVE (SPARAD)";
+            initDropdowns();
+            updateUI();
+            buildTable();
+        };
+        reader.readAsArrayBuffer(e.target.files[0]);
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+        const saved = localStorage.getItem('sodexo_dashboard_data');
+        if (saved) {
+            rawData = JSON.parse(saved);
+            document.getElementById('sync-status').innerText = "● LIVE (MINNE)";
+            initDropdowns();
+            updateUI();
+            buildTable();
+        }
+    });
+
+    function initDropdowns() {
+        const custS = document.getElementById('cust-select');
+        custS.innerHTML = '<option value="ALLA">Hela Portföljen</option>';
+        
+        // Hämta unika kunder från kolumner som innehåller kundnamn
+        let customers = new Set();
+        rawData.forEach(r => {
+            for (let key in r) {
+                if (key.toLowerCase().includes('verksamhet') || key.toLowerCase().includes('kund')) {
+                    if (r[key]) customers.add(r[key]);
+                }
             }
-        }
-        function logout() {
-            alert('Loggar ut och rensar session.');
-            window.location.reload();
-        }
-    </script>
+        });
+
+        [...customers].sort().forEach(k => {
+            const opt = document.createElement('option');
+            opt.value = k; opt.text = k; custS.appendChild(opt);
+        });
+    }
+
+    function updateUI() {
+        if (rawData.length === 0) return;
+        const cust = document.getElementById('cust-select').value;
+        const mon = document.getElementById('month-select').value;
+        
+        document.getElementById('label-m').innerText = (cust === 'ALLA' ? 'PORTFÖLJEN' : cust.toUpperCase()) + " | " + mon.toUpperCase();
+
+        let totalUtfall = 0;
+        let totalTarget = 0;
+
+        rawData.forEach(r => {
+            // Identifiera matchande rader baserat på valda filter
+            let matchCust = (cust === 'ALLA') || Object.values(r).some(val => val && val.toString().toLowerCase() === cust.toLowerCase());
+            let matchMon = Object.values(r).some(val => val && val.toString().toLowerCase().includes(mon.toLowerCase()));
+
+            if (matchCust && matchMon) {
+                for (let key in r) {
+                    if (key.toLowerCase().includes('oms') || key.toLowerCase().includes('utfall')) {
+                        totalUtfall += parseV(r[key]);
+                    }
+                    if (key.toLowerCase().includes('target')) {
+                        totalTarget += parseV(r[key]);
+                    }
+                }
+            }
+        });
+
+        const diff = totalUtfall - totalTarget;
+        document.getElementById('m-inc').innerText = fmt.format(totalUtfall);
+        document.getElementById('m-tar').innerText = fmt.format(totalTarget);
+        document.getElementById('m-diff').innerText = fmt.format(diff);
+        document.getElementById('m-diff-c').className = 'liquid-card ' + (diff >= 0 ? 'status-positive' : 'status-negative');
+    }
+
+    function buildTable() {
+        const tbody = document.querySelector('#data-table tbody');
+        tbody.innerHTML = '';
+        
+        rawData.forEach(r => {
+            let cust = "", utfall = 0, target = 0, månad = "";
+            for (let key in r) {
+                let lKey = key.toLowerCase();
+                if (lKey.includes('verksamhet') || lKey.includes('kund')) cust = r[key];
+                if (lKey.includes('oms') || lKey.includes('utfall')) utfall = parseV(r[key]);
+                if (lKey.includes('target')) target = parseV(r[key]);
+                if (lKey.includes('månad')) månad = r[key];
+            }
+
+            if (cust) {
+                let tr = document.createElement('tr');
+                let diff = utfall - target;
+                tr.innerHTML = `
+                    <td style="font-weight: 600; color: #fff;">${cust}</td>
+                    <td>${månad || '-'}</td>
+                    <td>${fmt.format(utfall)}</td>
+                    <td>${fmt.format(target)}</td>
+                    <td style="color: ${diff >= 0 ? 'var(--accent-green)' : 'var(--accent-orange)'}">${fmt.format(diff)}</td>
+                `;
+                tbody.appendChild(tr);
+            }
+        });
+    }
+
+    document.getElementById('cust-select').addEventListener('change', updateUI);
+    document.getElementById('month-select').addEventListener('change', updateUI);
+</script>
 </body>
 </html>
