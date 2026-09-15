@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Financial Dashboard — FY 27</title>
-    <!-- SheetJS för att läsa Excel-filer direkt i webbläsaren -->
+    <!-- SheetJS för att läsa Excel-filer -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <style>
         :root {
@@ -22,7 +22,7 @@
             margin: 0; padding: 30px 20px; min-height: 100vh;
         }
 
-        .container { max-width: 1400px; margin: 0 auto; }
+        .container { max-width: 1200px; margin: 0 auto; }
 
         .top-bar {
             display: flex; justify-content: space-between; align-items: center;
@@ -36,14 +36,14 @@
         .controls { display: flex; align-items: center; gap: 15px; flex-wrap: wrap; }
         .upload-btn {
             background: var(--accent-blue); color: #fff; border: none;
-            padding: 8px 16px; border-radius: 10px; font-weight: 600; cursor: pointer; font-size: 12px;
+            padding: 10px 20px; border-radius: 10px; font-weight: 600; cursor: pointer; font-size: 13px;
         }
         .upload-btn:hover { opacity: 0.8; }
         #excel-file { display: none; }
 
         select {
             background: rgba(0, 0, 0, 0.6); color: #fff; border: 1px solid var(--glass-border);
-            padding: 8px 14px; border-radius: 10px; font-size: 12px; outline: none; cursor: pointer;
+            padding: 10px 14px; border-radius: 10px; font-size: 13px; outline: none; cursor: pointer;
         }
 
         .header { text-align: center; margin-bottom: 30px; }
@@ -57,19 +57,23 @@
         .table-container {
             background: var(--glass-bg); backdrop-filter: blur(30px);
             border: 1px solid var(--glass-border); border-radius: 20px;
-            padding: 15px; overflow-x: auto; margin-bottom: 25px;
+            padding: 20px; overflow-x: auto; margin-bottom: 25px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
         }
-        table { width: 100%; border-collapse: collapse; font-size: 11px; text-align: left; white-space: nowrap; }
+
+        /* Snygg stil på tabellen som genereras */
+        table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; white-space: nowrap; }
         th { 
             position: sticky; top: 0; background: rgba(10, 17, 26, 0.95);
-            color: var(--accent-blue); padding: 12px 8px; font-weight: 700;
+            color: var(--accent-blue); padding: 14px 10px; font-weight: 700;
             border-bottom: 1px solid var(--glass-border); text-align: right;
         }
         th:first-child { text-align: left; }
-        td { padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.04); color: #ccc; text-align: right; }
+        td { padding: 12px 10px; border-bottom: 1px solid rgba(255,255,255,0.04); color: #ddd; text-align: right; }
         td:first-child { text-align: left; font-weight: 600; color: #fff; }
+        tr:hover { background: rgba(255,255,255,0.02); }
         
-        .placeholder-msg { text-align: center; padding: 40px; color: #86868b; font-size: 14px; }
+        .placeholder-msg { text-align: center; padding: 60px; color: #86868b; font-size: 14px; }
     </style>
 </head>
 <body>
@@ -81,8 +85,8 @@
             <span id="status-text">VÄNTAR PÅ EXCEL-FIL</span>
         </div>
         <div class="controls">
-            <select id="sheet-select" onchange="switchSheet()">
-                <option value="">Välj blad...</option>
+            <select id="sheet-select" style="display:none;" onchange="switchSheet()">
+                <option value="">Välj tabellvy...</option>
             </select>
             <label for="excel-file" class="upload-btn">📁 Välj Excel-fil (.xlsx)</label>
             <input type="file" id="excel-file" accept=".xlsx, .xls, .csv" onchange="handleFileUpload(event)">
@@ -90,8 +94,8 @@
     </div>
 
     <div class="header">
-        <h1>Finansiell Dashboard — Target, Utfall & Diff</h1>
-        <p>Ladda upp din modell för att generera gränssnittet</p>
+        <h1>Finansiell Dashboard</h1>
+        <p>Välj vy och analysera uppdragets nyckeltal</p>
     </div>
 
     <div class="table-container" id="table-wrapper">
@@ -112,25 +116,27 @@
             loadedWorkbook = XLSX.read(data, { type: 'array', cellFormula: false, cellText: true });
 
             const sheetSelect = document.getElementById('sheet-select');
-            sheetSelect.innerHTML = '';
+            sheetSelect.innerHTML = '<option value="">Välj tabellvy...</option>';
             
             loadedWorkbook.SheetNames.forEach(name => {
-                const opt = document.createElement('option');
-                opt.value = name;
-                opt.textContent = name;
-                sheetSelect.appendChild(opt);
+                // Filtrera bort dolda/hjälp-blad om vi vill hålla det rent
+                if (name !== 'dropdowns') {
+                    const opt = document.createElement('option');
+                    opt.value = name;
+                    opt.textContent = name;
+                    sheetSelect.appendChild(opt);
+                }
             });
 
+            sheetSelect.style.display = 'inline-block';
             document.getElementById('status-text').textContent = 'FIL INLADDAD';
 
-            // Välj "Target FY 27-utfall-diff" som standard om det finns, annars första bladet
-            let targetSheet = "Target FY 27-utfall-diff";
-            if (!loadedWorkbook.Sheets[targetSheet]) {
-                targetSheet = loadedWorkbook.SheetNames[0];
+            // Välj första synliga bladet som standard
+            const visibleSheets = loadedWorkbook.SheetNames.filter(n => n !== 'dropdowns');
+            if (visibleSheets.length > 0) {
+                sheetSelect.value = visibleSheets[0];
+                switchSheet();
             }
-            
-            sheetSelect.value = targetSheet;
-            switchSheet();
         };
         reader.readAsArrayBuffer(file);
     }
