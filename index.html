@@ -81,7 +81,7 @@
             <span id="status-text">VÄNTAR PÅ EXCEL-FIL</span>
         </div>
         <div class="controls">
-            <select id="sheet-select" style="display:none;" onchange="switchSheet()">
+            <select id="sheet-select" onchange="switchSheet()">
                 <option value="">Välj blad...</option>
             </select>
             <label for="excel-file" class="upload-btn">📁 Välj Excel-fil (.xlsx)</label>
@@ -91,7 +91,7 @@
 
     <div class="header">
         <h1>Finansiell Dashboard — Target, Utfall & Diff</h1>
-        <p>Ladda upp din kompletta modell för att generera gränssnittet</p>
+        <p>Ladda upp din modell för att generera gränssnittet</p>
     </div>
 
     <div class="table-container" id="table-wrapper">
@@ -111,9 +111,8 @@
             const data = new Uint8Array(e.target.result);
             loadedWorkbook = XLSX.read(data, { type: 'array', cellFormula: false, cellText: true });
 
-            // Fyll rullgardinsmenyn med blad från filen
             const sheetSelect = document.getElementById('sheet-select');
-            sheetSelect.innerHTML = '<option value="">Välj blad i arket...</option>';
+            sheetSelect.innerHTML = '';
             
             loadedWorkbook.SheetNames.forEach(name => {
                 const opt = document.createElement('option');
@@ -122,14 +121,16 @@
                 sheetSelect.appendChild(opt);
             });
 
-            sheetSelect.style.display = 'inline-block';
-            document.getElementById('status-text').textContent = 'FIL INLADDAD — VÄLJ BLAD';
+            document.getElementById('status-text').textContent = 'FIL INLADDAD';
 
-            // Visa automatiskt det första bladet som standard
-            if (loadedWorkbook.SheetNames.length > 0) {
-                sheetSelect.value = loadedWorkbook.SheetNames[0];
-                switchSheet();
+            // Välj "Target FY 27-utfall-diff" som standard om det finns, annars första bladet
+            let targetSheet = "Target FY 27-utfall-diff";
+            if (!loadedWorkbook.Sheets[targetSheet]) {
+                targetSheet = loadedWorkbook.SheetNames[0];
             }
+            
+            sheetSelect.value = targetSheet;
+            switchSheet();
         };
         reader.readAsArrayBuffer(file);
     }
