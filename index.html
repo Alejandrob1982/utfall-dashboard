@@ -11,7 +11,6 @@
             --glass-border: rgba(255, 255, 255, 0.08);
             --accent-blue: #007aff;
             --accent-green: #34c759;
-            --accent-orange: #ff9500;
             --bg-deep: #000205;
         }
 
@@ -34,13 +33,18 @@
         .status-indicator { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--accent-green); font-weight: 600; }
         .status-dot { width: 8px; height: 8px; background: var(--accent-green); border-radius: 50%; box-shadow: 0 0 10px var(--accent-green); }
 
-        .upload-section { display: flex; align-items: center; gap: 10px; }
+        .controls { display: flex; align-items: center; gap: 15px; flex-wrap: wrap; }
         .upload-btn {
             background: var(--accent-blue); color: #fff; border: none;
             padding: 8px 16px; border-radius: 10px; font-weight: 600; cursor: pointer; font-size: 12px;
         }
         .upload-btn:hover { opacity: 0.8; }
         #excel-file { display: none; }
+
+        select {
+            background: rgba(0, 0, 0, 0.6); color: #fff; border: 1px solid var(--glass-border);
+            padding: 8px 14px; border-radius: 10px; font-size: 12px; outline: none; cursor: pointer;
+        }
 
         .header { text-align: center; margin-bottom: 30px; }
         .header h1 { 
@@ -74,9 +78,12 @@
     <div class="top-bar">
         <div class="status-indicator">
             <div class="status-dot"></div>
-            <span>DASHBOARD REDO</span>
+            <span id="status-text">VÄNTAR PÅ EXCEL-FIL</span>
         </div>
-        <div class="upload-section">
+        <div class="controls">
+            <select id="sheet-select" style="display:none;" onchange="switchSheet()">
+                <option value="">Välj blad...</option>
+            </select>
             <label for="excel-file" class="upload-btn">📁 Välj Excel-fil (.xlsx)</label>
             <input type="file" id="excel-file" accept=".xlsx, .xls, .csv" onchange="handleFileUpload(event)">
         </div>
@@ -84,15 +91,17 @@
 
     <div class="header">
         <h1>Finansiell Dashboard — Target, Utfall & Diff</h1>
-        <p>Ladda upp uppdragets Excel-fil för att direkt generera gränssnittet</p>
+        <p>Ladda upp din kompletta modell för att generera gränssnittet</p>
     </div>
 
     <div class="table-container" id="table-wrapper">
-        <div class="placeholder-msg">Ingen Excel-fil inladdad ännu. Klicka på "Välj Excel-fil" ovan för att börja.</div>
+        <div class="placeholder-msg">Ingen Excel-fil inladdad ännu. Klicka på "Välj Excel-fil" för att börja.</div>
     </div>
 </div>
 
 <script>
+    let loadedWorkbook = null;
+
     function handleFileUpload(e) {
         const file = e.target.files[0];
         if (!file) return;
@@ -100,26 +109,40 @@
         const reader = new FileReader();
         reader.onload = function(e) {
             const data = new Uint8Array(e.target.result);
-            const workbook = XLSX.read(data, { type: 'array' });
+            loadedWorkbook = XLSX.read(data, { type: 'array', cellFormula: false, cellText: true });
 
-            // Ta första bladet i Excel-filen
-            const firstSheetName = workbook.SheetNames[0];
-            const worksheet = workbook.Sheets[firstSheetName];
+            // Fyll rullgardinsmenyn med blad från filen
+            const sheetSelect = document.getElementById('sheet-select');
+            sheetSelect.innerHTML = '<option value="">Välj blad i arket...</option>';
+            
+            loadedWorkbook.SheetNames.forEach(name => {
+                const opt = document.createElement('option');
+                opt.value = name;
+                opt.textContent = name;
+                sheetSelect.appendChild(opt);
+            });
 
-            // Gör om bladet till en HTML-tabell
-            const htmlTable = XLSX.utils.sheet_to_html(worksheet, { header: "" });
+            sheetSelect.style.display = 'inline-block';
+            document.getElementById('status-text').textContent = 'FIL INLADDAD — VÄLJ BLAD';
 
-            // Rendera ut i containern
-            const wrapper = document.getElementById('table-wrapper');
-            wrapper.innerHTML = htmlTable;
-
-            // Anpassa tabellens klasser för vår snygga mörka design
-            const table = wrapper.querySelector('table');
-            if (table) {
-                table.id = "excel-rendered-table";
+            // Visa automatiskt det första bladet som standard
+            if (loadedWorkbook.SheetNames.length > 0) {
+                sheetSelect.value = loadedWorkbook.SheetNames[0];
+                switchSheet();
             }
         };
         reader.readAsArrayBuffer(file);
+    }
+
+    function switchSheet() {
+        const sheetName = document.getElementById('sheet-select').value;
+        if (!sheetName || !loadedWorkbook) return;
+
+        const worksheet = loadedWorkbook.Sheets[sheetName];
+        const htmlTable = XLSX.utils.sheet_to_html(worksheet, { header: "" });
+
+        const wrapper = document.getElementById('table-wrapper');
+        wrapper.innerHTML = htmlTable;
     }
 </script>
 
